@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>你是哪個漫威角色？心理測驗</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fef5e7;
+      color: #333;
+      text-align: center;
+      padding: 2rem;
+    }
+    .question-box {
+      max-width: 600px;
+      margin: auto;
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin: 1rem auto;
+      padding: 1rem;
+      font-size: 1.1rem;
+      background-color: #f8c471;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #f5b041;
+    }
+    #result {
+      margin-top: 2rem;
+    }
+    #clown-img {
+      max-width: 300px;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>你是哪個漫威角色？</h1>
+  <div class="question-box" id="quiz-box">
+    <div id="question"></div>
+    <div id="options"></div>
+  </div>
+  <div id="result"></div>
+
+  <script>
+    const questions = [
+      {
+        text: "你週末最想做什麼？",
+        options: ["探險", "宅在家", "和朋友聚會"]
+      },
+      {
+        text: "你最喜歡的交通工具？",
+        options: ["飛行船", "火車", "走路就好"]
+      },
+      {
+        text: "朋友說你像？",
+        options: ["很夢幻", "很可靠", "有點怪怪的"]
+      },
+      {
+        text: "你最想住在？",
+        options: ["森林小屋", "空中城堡", "熱鬧都市"]
+      },
+      {
+        text: "你最常被說個性是？",
+        options: ["溫柔", "堅強", "奇怪但可愛"]
+      }
+    ];
+
+    let currentQuestion = 0;
+    let answers = [];
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById("question").innerText = `第 ${currentQuestion + 1} 題：${q.text}`;
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => handleAnswer(i);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(index) {
+      answers.push(index);
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const character = analyzeAnswers();
+      const resultDiv = document.getElementById("quiz-box");
+      resultDiv.innerHTML = `<h2>你是：${character}！</h2>`;
+
+      const resultText = document.getElementById("result");
+      resultText.innerHTML = `
+      <h2>🎉 愚人節快樂 🎉</h2>
+        <img id="clown-img" src="img/crown.png" alt="小丑圖片">
+      `;
+    }
+
+    function analyzeAnswers() {
+      const total = answers.reduce((a, b) => a + b, 0);
+      if (total <= 4) return "小鈺";
+      if (total <= 7) return "小可愛";
+      return "可愛JuJu";
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
