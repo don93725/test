@@ -2,43 +2,90 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>你是哪個漫威角色？心理測驗</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fef5e7;
       color: #333;
-      text-align: center;
-      padding: 2rem;
+      margin: 0;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+
+    h1 {
+      font-size: 2rem;
+      margin: 1rem 0;
+      text-align: center;
+    }
+
     .question-box {
+      width: 100%;
       max-width: 600px;
-      margin: auto;
       background-color: #fff;
       padding: 2rem;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
+
+    #question {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+    }
+
     button {
       display: block;
       width: 100%;
-      margin: 1rem auto;
-      padding: 1rem;
-      font-size: 1.1rem;
+      margin: 1rem 0;
+      padding: 1.2rem;
+      font-size: 1.2rem;
       background-color: #f8c471;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
+      transition: background-color 0.2s;
     }
+
     button:hover {
       background-color: #f5b041;
     }
+
     #result {
       margin-top: 2rem;
+      text-align: center;
     }
+
     #clown-img {
-      max-width: 300px;
-      margin-top: 1rem;
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      #question {
+        font-size: 1.1rem;
+      }
+
+      button {
+        font-size: 1.1rem;
+        padding: 1.4rem;
+      }
+
+      #clown-img {
+        max-width: 90%;
+      }
     }
   </style>
 </head>
@@ -102,13 +149,13 @@
 
     function showResult() {
       const character = analyzeAnswers();
-      const resultDiv = document.getElementById("quiz-box");
-      resultDiv.innerHTML = `<h2>你是：${character}！</h2>`;
+      const quizBox = document.getElementById("quiz-box");
+      quizBox.innerHTML = `<h2>你是：${character}！</h2>`;
 
-      const resultText = document.getElementById("result");
-      resultText.innerHTML = `
-      <h2>🎉 愚人節快樂 🎉</h2>
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `
         <img id="clown-img" src="img/crown.png" alt="小丑圖片">
+        <h2>🎉 愚人節快樂 🎉</h2>
       `;
     }
 
