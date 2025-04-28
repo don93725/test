@@ -102,7 +102,16 @@ let selected = [];
 let currentIndex = 0;
 let userAnswers = [];
 let isErrorPracticeMode = false;
-
+function pickRandomQuestions(array, count) {
+  const picked = [];
+  const copy = [...array];
+  while (picked.length < count && copy.length > 0) {
+    const idx = Math.floor(Math.random() * copy.length);
+    picked.push(copy.splice(idx, 1)[0]);
+  }
+  return picked;
+}
+  
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -116,7 +125,8 @@ async function startQuiz() {
     questions = await response.json();
   }
   shuffle(selected);
-  selected = questions.slice(0, 10);
+  //selected = questions.slice(0, 10);
+  selected = pickRandomQuestions(questions, 10);
   currentIndex = 0; userAnswers = [];
   isErrorPracticeMode = false;
   document.getElementById("result").innerHTML = "";
