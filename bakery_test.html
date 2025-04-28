@@ -122,6 +122,7 @@ async function startQuiz() {
   document.getElementById("result").innerHTML = "";
   document.getElementById("pieChart").style.display = "none";
   document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
   showQuestion();
 }
 
