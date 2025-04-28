@@ -66,6 +66,7 @@
       background: #ffe6d5;
       transform: scale(1.02);
     }
+    #prevBtn { display: none; }
   </style>
 </head>
 <body>
@@ -151,7 +152,12 @@ function prevQuestion() {
 }
 
 function updateButtonState() {
-  document.getElementById("prevBtn").disabled = currentIndex <= 0;
+  const prevBtn = document.getElementById('prevBtn');
+  if (currentIndex <= 0 || currentIndex >= selected.length) {
+    prevBtn.style.display = 'none';
+  } else {
+    prevBtn.style.display = 'inline-block';
+  }
 }
 
 function showResult() {
