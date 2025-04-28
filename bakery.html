@@ -1,3 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>焙烤食品 丙級測驗</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js">
+<style>
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #fefaf6;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  h1 {
+    color: #ff7e5f;
+    text-align: center;
+  }
+  .question {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .difficulty {
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 20px;
+  }
+  .options label {
+    display: block;
+    background: #fff0e6;
+    border: 2px solid #ffc2b3;
+    padding: 12px;
+    border-radius: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .options label:hover {
+    background: #ffe6d5;
+    transform: scale(1.02);
+  }
+  button {
+    background: #ff7e5f;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 10px 5px 0 0;
+    transition: all 0.3s;
+  }
+  button:hover {
+    background: #ff5c3a;
+    transform: scale(1.05);
+  }
+  .correct { background: #e0ffe0; border: 1px solid #50d050; padding: 15px; border-radius: 10px; margin-top: 15px; }
+  .wrong { background: #ffe0e0; border: 1px solid #ff6060; padding: 15px; border-radius: 10px; margin-top: 15px; }
+  .ranking-entry { background: #fff4f0; padding: 12px; border-radius: 8px; margin: 8px 0; }
+  .first { background: #ffe066; font-weight: bold; }
+  .second { background: #ffcc99; }
+  .third { background: #ffb3b3; }
+  .result { margin-top: 30px; }
+  .progress-bar {
+    width: 100%;
+    background: #ffe6d5;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, #ff9a8b, #ff6a88);
+    transition: width 0.4s;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>焙烤食品 丙級測驗</h1>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div id="quiz"></div>
+  <button id="nextBtn" onclick="nextQuestion()">開始測驗</button>
+  <button onclick="showErrorRanking()">錯題排行榜</button>
+  <button onclick="clearErrorData()">清除錯題紀錄</button>
+  <button onclick="startErrorPractice()">錯題練習</button>
+  <button onclick="startUnansweredPractice()">未作答練習</button>
+  <div class="result" id="result"></div>
+  <canvas id="pieChart" width="400" height="400" style="display:none;"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 let questions = [];
 let selected = [];
@@ -98,3 +201,5 @@ function showResult() {
   drawPie(correct, selected.length-correct);
 }
 </script>
+</body>
+</html>
