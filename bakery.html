@@ -41,8 +41,10 @@
     }
     .button-row {
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
+      align-items: center;
       margin-bottom: 20px;
+      gap: 10px;
     }
     .other-buttons {
       display: flex;
@@ -76,7 +78,9 @@
       background: #ffe6d5;
       transform: scale(1.02);
     }
-    #prevBtn { display: none; }
+    #prevBtn.invisible {
+      visibility: hidden;
+    }
   </style>
 </head>
 <body>
