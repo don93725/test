@@ -5168,6 +5168,7 @@ function startQuiz() {
   document.getElementById("result").innerHTML = "";
   showQuestion();
   document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
 }
 
 function showQuestion() {
