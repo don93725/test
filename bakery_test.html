@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>焙烤食品 丙級測驗</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; color: #333; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .question { margin-bottom: 20px; font-size: 18px; }
+    .options label { display: block; margin: 8px 0; cursor: pointer; }
+    button { background: #007BFF; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .wrong { color: red; margin-top: 5px; }
+    .correct { color: green; margin-top: 5px; }
+    .result { margin-top: 30px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>焙烤食品 丙級測驗</h1>
+  <div id="quiz"></div>
+  <button id="nextBtn" onclick="nextQuestion()">開始測驗</button>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+  let questions = [];
+  let selected = [];
+  let currentIndex = 0;
+  let userAnswers = [];
+  
+  async function startQuiz() {
+    if (questions.length === 0) {
+      const response = await fetch('questions.json');
+      questions = await response.json();
+    }
+  
+    selected = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+    currentIndex = 0;
+    userAnswers = [];
+    document.getElementById("result").innerHTML = "";
+    showQuestion();
+    document.getElementById("nextBtn").innerText = "下一題";
+    document.getElementById("nextBtn").onclick = nextQuestion;
+  }
+  
+  function showQuestion() {
+    const quizDiv = document.getElementById("quiz");
+    const q = selected[currentIndex];
+    quizDiv.innerHTML = `<div class="question">(${currentIndex + 1}) ${q.q}</div>
+      <div class="options">
+      ${q.options.map((opt, i) => `<label><input type='radio' name='option' value='${i}'> <span>${opt}</span></label>`).join('')}
+      </div>`;
+  }
+  
+  function nextQuestion() {
+    const selectedOption = document.querySelector("input[name='option']:checked");
+    if (!selectedOption) {
+      alert("請先選擇一個答案！");
+      return;
+    }
+  
+    userAnswers.push(parseInt(selectedOption.value));
+    currentIndex++;
+  
+    if (currentIndex < selected.length) {
+      showQuestion();
+    } else {
+      showResult();
+    }
+  }
+  
+  function showResult() {
+    let correct = 0;
+    let resultHTML = "";
+  
+    selected.forEach((q, idx) => {
+      if (userAnswers[idx] === q.answer) {
+        correct++;
+        resultHTML += `<div class='correct'><p>第 ${idx + 1} 題答對！</p>
+        <p>題目：${q.q}</p>
+        <p>正確答案：${q.options[q.answer]}</p></div><hr>`;
+      } else {
+        resultHTML += `<div class='wrong'><p>第 ${idx + 1} 題錯誤！</p>
+        <p>題目：${q.q}</p>
+        <p>選項：${q.options.map((opt, i) => `${i + 1}. ${opt}`).join(' / ')}</p>
+        <p>你的答案：${q.options[userAnswers[idx]] || "未作答"}</p>
+        <p>正確答案：${q.options[q.answer]}</p></div><hr>`;
+      }
+    });
+  
+    document.getElementById("quiz").innerHTML = "";
+    document.getElementById("nextBtn").innerText = "重新開始";
+    document.getElementById("nextBtn").onclick = startQuiz;
+  
+    document.getElementById("result").innerHTML = `<h2>作答完成！共答對 ${correct} / ${selected.length} 題。</h2>` + resultHTML;
+  }
+  
+  // 頁面一進來就呼叫 startQuiz
+  startQuiz();
+  </script>
+
+</body>
+</html>

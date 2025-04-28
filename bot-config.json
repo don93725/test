@@ -1,0 +1,589 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"format": "categories",
+	"basicCategoryTitle": "{{M:bot.config.basic.title}}",
+	"name": "bot-config",
+	"title": "{{M:bot.config.title}}（LINE/Messenger...）",
+	"description": "",
+	"properties": {
+		"line": {
+			"type": "object",
+			"title":"LINE {{M:global.setting}}",
+			"properties": {
+				"desc": {
+					"type": "string",
+					"title": "{{M:bot.config.property.desc.title}}",
+					"description": "LINE {{M:bot.config.property.desc.desc}}",
+					"propertyOrder": 5
+				},
+				"domainUrl": {
+					"type": "string",
+					"description": "{{M:bot.config.property.domain.desc}}",
+					"propertyOrder": 10
+				},
+				"useGatewayCallApi": {
+					"type": "boolean",
+					"description": "{{M:bot.config.line.property.usegw.desc}}",
+					"format": "checkbox",
+					"default": false,
+					"propertyOrder": 20
+				},
+				"gatewayBaseUrl": {
+					"type": "string",
+					"description": "{{M:bot.config.property.gwurl.desc}}",
+					"propertyOrder": 21
+				},
+				"proxyAgent": {
+					"type": "string",
+					"title": "{{M:bot.config.property.proxy.title}}",
+					"description": "{{M:bot.config.property.proxy.desc}}",
+					"propertyOrder": 22
+				},
+				"channelId": {
+					"type": "string",
+					"propertyOrder": 30
+				},
+				"channelSecret": {
+					"type": "string",
+					"propertyOrder": 31
+				},
+				"accessToken": {
+					"type": "string",
+					"format": "textarea",
+					"propertyOrder": 32
+				},
+				"apiVersion": {
+					"enumSource": [
+						{
+							"source": [
+								"v2"
+							],
+							"title": "{{item}}",
+							"value": "{{item}}"
+						}
+					],
+					"propertyOrder": 33
+				},
+				"enableAudioSTT": {
+					"type": "boolean",
+					"description": "{{M:bot.config.line.property.stt.desc}}",
+					"format": "checkbox",
+					"default": false,
+					"propertyOrder": 40
+				},
+				"enableAnswerTTS": {
+					"type": "boolean",
+					"description": "{{M:bot.config.line.property.tts.desc}}",
+					"format": "checkbox",
+					"default": false,
+					"propertyOrder": 41
+				},
+				"enableMenu2QuickReply": {
+					"type": "boolean",
+					"description": "{{M:bot.config.line.property.quickreply.desc}}",
+					"format": "checkbox",
+					"default": false,
+					"propertyOrder": 42
+				},
+				"usePostbackForTemplateAction": {
+					"type": "boolean",
+					"description": "{{M:bot.config.line.property.postback.template.desc}}",
+					"format": "checkbox",
+					"default": false,
+					"propertyOrder": 43
+				},
+				"addDisplayTextWhenUsingPostback": {
+					"type": "boolean",
+					"description": "{{M:bot.config.line.property.postback.display.desc}}",
+					"format": "checkbox",
+					"default": true,
+					"propertyOrder": 44
+				},
+				"enableTemplate2Flex": {
+					"type": "boolean",
+					"description": "{{M:bot.config.line.property.2flex.desc}}",
+					"format": "checkbox",
+					"default": false,
+					"propertyOrder": 45
+				},
+				"loginChannelId": {
+					"type": "string",
+					"propertyOrder": 34
+				},
+				"loginChannelSecret": {
+					"type": "string",
+					"propertyOrder": 35
+				},
+				"loginAccessToken": {
+					"type": "string",
+					"format": "textarea",
+					"propertyOrder": 36,
+					"description": "{{M:bot.config.line.property.login.token.desc}}"
+				},
+				"loginAccessTokenTime": {
+					"type": "number",
+					"propertyOrder": 37,
+					"description": "{{M:bot.config.line.property.login.token.time.desc}}"
+				},
+				"liveAgent": {
+					"type": "object",
+					"title": "LINE {{M:top.live.agent}}",
+					"properties": {
+						"applyLiveAgentMagicKeyword": { "type": "string", "propertyOrder": 10 },
+						"userMessageTemplate": { "type": "string", "format": "textarea", "propertyOrder": 20 }
+					}
+				}
+			}
+		},
+		"messenger": {
+			"type": "object",
+			"title": "Messenger {{M:global.setting}}",
+			"properties": {
+    		"desc": { "type": "string", "title":"{{M:bot.config.property.desc.title}}", "description":"Facebook Messenger {{M:bot.config.property.desc.desc}}", "propertyOrder": 5},
+    		"domainUrl": { "type": "string", "description": "{{M:bot.config.property.domain.desc}}", "propertyOrder": 10},
+    		"useGatewayCallApi": { "type": "boolean", "description": "{{M:bot.config.messenger.property.usegw.desc}}", "format": "checkbox", "default": false, "propertyOrder": 20},
+    		"gatewayBaseUrl": { "type": "string", "description": "{{M:bot.config.property.gwurl.desc}}", "propertyOrder": 21 },
+    		"proxyAgent": { "type": "string", "title": "{{M:bot.config.property.proxy.title}}", "description": "{{M:bot.config.property.proxy.desc}}", "propertyOrder": 22},
+    		"appId": { "type": "string", "propertyOrder": 30},
+    		"appSecret": { "type": "string", "propertyOrder": 31},
+    		"appToken": { "type": "string", "propertyOrder": 32},
+    		"provider": { "type": "string", "propertyOrder": 33},
+    		"pageId": { "type": "string", "propertyOrder": 34},
+    		"pageToken": { "type": "string", "format": "textarea", "propertyOrder": 35},
+    		"verifyToken": { "type": "string", "propertyOrder": 36},
+    		"apiVersion": { "enumSource": [{ "source": [ "v4.0", "v5.0", "v6.0" ], "title": "{{item}}", "value": "{{item}}" }], "propertyOrder": 37}
+			}
+		},
+		"botframework": {
+			"type": "object",
+			"title": "MS BOT Service {{M:global.setting}}",
+			"properties": {
+				"desc": { "type": "string", "title":"{{M:bot.config.property.desc.title}}", "description":"BOT Framework {{M:bot.config.property.desc.desc}}", "propertyOrder": 5},
+				"channelId": { "type": "string", "propertyOrder": 10},
+				"channelSecret": { "type": "string", "propertyOrder": 11},
+				"aadAppId": { "type": "string", "description":"{{M:bot.config.botframework.property.aad.id.desc}}",  "propertyOrder": 12},
+				"aadAppSecret": { "type": "string", "description":"{{M:bot.config.botframework.property.aad.secret.desc}}",  "propertyOrder": 13},
+				"redirectUri": { "type": "string", "description":"{{M:bot.config.botframework.property.redirect.desc}}", "propertyOrder": 14},
+				"logoutUri": { "type": "string", "description":"{{M:bot.config.botframework.property.logout.desc}}", "propertyOrder": 15},
+				"listCardIcon": { "type": "string", "description":"{{M:bot.config.botframework.property.icon.desc}}", "propertyOrder": 16},
+				"platform": { "type": "object", "propertyOrder": 17},
+				"appendFeedback": { "type": "boolean", "description": "{{M:bot.config.botframework.property.appendFeedback.desc}}", "format": "checkbox", "default": false, "propertyOrder": 18 },
+				"useGatewayCallApi": { "type": "boolean", "description": "{{M:bot.config.botframework.property.usegw.desc}}", "format": "checkbox", "default": false, "propertyOrder": 19},
+    		    "gatewayBaseUrl": { "type": "string", "description": "{{M:bot.config.property.gwurl.desc}}", "propertyOrder": 20 },
+    		    "proxyAgent": { "type": "string", "title": "{{M:bot.config.property.proxy.title}}", "description": "{{M:bot.config.property.proxy.desc}}", "propertyOrder": 21},
+				"liveAgent": {
+					"type": "object",
+					"title":"Teams {{M:top.live.agent}}",
+					"properties": {
+						"applyLiveAgentMagicKeyword": { "type": "string", "propertyOrder": 10},
+						"userMessageTemplate": { "type": "string", "format": "textarea", "propertyOrder": 20}
+					}
+				}
+			}
+		},
+		"twilio": {
+			"type": "object",
+			"title": "Twilio Service {{M:global.setting}}",
+			"properties": {
+    		"desc": { "type": "string", "title":"{{M:bot.config.property.desc.title}}", "description":"Twilio Service  {{M:bot.config.property.desc.desc}}", "propertyOrder": 5},
+    		"accountSid": { "type": "string", "description":"Account SID", "propertyOrder": 10},
+    		"authToken": { "type": "string", "description":"XXXXX({{M:bot.config.twilio.property.token.desc}})", "propertyOrder": 11},
+    		"phoneNumber": { "type": "string", "description":"XXXXX({{M:bot.config.twilio.property.phone.desc}})",  "propertyOrder": 12},
+    		"outboundUrl": { "type": "string", "description":"Same as Webhook in Twilio",  "propertyOrder": 13},
+    		"callStatusCallbackUrl": { "type": "string", "description":"{domainUrl}/wise/1/twilio/callStatus/callback",  "propertyOrder": 14},
+    		"recordingCallbackUrl": { "type": "string", "description":"{domainUrl}/wise/1/twilio/recording/callback",  "propertyOrder": 15},
+    		"recordingStorageDir": { "type": "string", "description":"{domainUrl}/{InstallDirectory/kernel/recording",  "propertyOrder": 16},
+    		"qaAskUrl": { "type": "string", "description":"{domainUrl}/wise/1/twilio/qa/ask",  "propertyOrder": 17}
+			}
+		},
+		"OpenAI": {
+			"type": "object",
+			"title":"AIGC {{M:global.setting}}",
+			"format": "categories",
+			"basicCategoryTitle": "{{M:global.general}} {{M:global.setting}}",
+			"defaultProperties": [
+				"enableGenerateTrainingData", "modelForGenerateTrainingData",
+				"enableGenerateAnswerFromStandardQ", "modelForGenerateAnswerFromStandardQ", "instructionForGenerateAnswerFromStandardQ",
+				"enableGenerateSynonyms", "instructionForGenerateSynonyms", "modelForGenerateSynonym",
+				"llms", "llmServices"
+			],
+			"properties": {
+				"desc": { "type": "string", "title":"{{M:bot.config.property.desc.title}}", "description":"AIGC {{M:bot.config.property.desc.desc}}", "propertyOrder": 6},
+				"service": {
+					"title": "Choose AIGC service",
+					"description": "@DEPRECATED, Please setup the LLM Services",
+					"type": "enum",
+					"enumSource": [{
+						"source": [
+							"AZURE_OPENAI",
+							"OPENAI",
+							"VERTEX_AI",
+							"LLAMA2"
+						],
+						"title": "{{item}}",
+						"value": "{{item}}"
+					}]
+				},
+				"apikey": { "type": "string", "title": "@Deprecated APIKEY", "description": "@DEPRECATED, Please setup this in the LLM Services, APIKEY from Azure OpenAI, required when using Azure OpenAI service",
+					"options": { "dependencies": { "service": "AZURE_OPENAI" } }},
+				"apikeyForOpenAi": { "type": "string", "title": "@Deprecated APIKEY for OpenAI", "description": "@DEPRECATED, Please setup this in the LLM Services, Required when using OpenAI service",
+					"options": { "dependencies": { "service": "OPENAI" } }},
+				"resourceName": { "type": "string", "title": "@Deprecated Azure Resource Name", "description": "@DEPRECATED, Please setup this in the LLM Services, Required when using Azure OpenAI service",
+					"options": { "dependencies": { "service": "AZURE_OPENAI" } }},
+				"deploymentName": { "type": "string", "title": "@Deprecated OpenAI Deployment Name", "description": "@DEPRECATED, Please setup this in the LLM Services, Required when using Azure OpenAI service",
+					"options": { "dependencies": { "service": "AZURE_OPENAI" } }},
+				"vertexAiCredentialJson": { "type": "string", "format": "textarea", "title": "@Deprecated Google credential for Vertex AI", "description": "@DEPRECATED, Please setup this in the LLM Services. obtains from https://console.cloud.google.com/iam-admin/serviceaccounts",
+					"options": { "dependencies": { "service": "VERTEX_AI" } }},
+				"defaultTimeout": {
+					"title": "@Deprecated API Timeout",
+					"options": { "infoText": "@DEPRECATED, Please setup this in the LLM Services, Seconds allowed when calling AIGC API, default 20s" },
+					"type": "integer"
+				},
+				"defaultModel": {
+					"title": "Default Model",
+					"watch": { "llms": "OpenAI.llms" },
+					"enumSource": [{ "source": "llms", "title": "{{item.llmMkey}} ({{item.serviceProvider}})", "value": "{{item.llmMkey}}" }],
+					"type": "string",
+					"propertyOrder": 17
+				},
+				"enableGenerateTrainingData": {
+					"title": "{{M:bot.config.openai.property.enableGenerateTrainingData.title}}",
+					"options": { "infoText": "{{M:bot.config.openai.property.enableGenerateTrainingData.desc}}" },
+					"type": "boolean",
+					"format": "checkbox",
+					"default": false,
+					"propertyOrder": 20
+				},
+				"modelForGenerateTrainingData": {
+					"title": "{{M:bot.config.openai.property.modelForGenerateTrainingData.title}}",
+					"type": "string",
+					"watch": { "llms": "OpenAI.llms" },
+					"enumSource": [{ "source": "llms", "title": "{{item.llmMkey}} ({{item.serviceProvider}})", "value": "{{item.llmMkey}}" }],
+					"options": {
+						"dependencies": { "enableGenerateTrainingData": true } },
+					"default": false,
+					"propertyOrder": 21
+				},
+				"enableGenerateSynonyms": {
+					"title": "{{M:bot.config.openai.property.enableGenerateSynonyms.title}}",
+					"options": { "infoText": "{{M:bot.config.openai.property.enableGenerateSynonyms.desc}}" },
+					"type": "boolean",
+					"format": "checkbox",
+					"default": false,
+					"propertyOrder": 23
+				},
+				"instructionForGenerateSynonyms": {
+					"title": "{{M:bot.config.openai.property.instructionForGenerateSynonyms.title}}",
+					"options": {
+						"infoText": "{{M:bot.config.openai.property.instructionForGenerateSynonyms.desc}}",
+						"dependencies": { "enableGenerateSynonyms": true } },
+					"type": "string",
+					"format": "textarea",
+					"propertyOrder": 24
+				},
+				"modelForGenerateSynonym": {
+					"title": "{{M:bot.config.openai.property.modelForGenerateSynonym.title}}",
+					"options": {
+						"dependencies": { "enableGenerateSynonyms": true } },
+					"type": "string",
+					"watch": { "llms": "OpenAI.llms" },
+					"enumSource": [{ "source": "llms", "title": "{{item.llmMkey}} ({{item.serviceProvider}})", "value": "{{item.llmMkey}}" }],
+					"propertyOrder": 25
+				},
+				"instructionForFaqGenerator": {
+					"title": "{{M:bot.config.openai.property.instructionForFaqGenerator.title}}",
+					"options": { "infoText": "{{M:bot.config.openai.property.instructionForFaqGenerator.desc}}" },
+					"type": "string",
+					"format": "textarea",
+					"propertyOrder": 27
+				},
+				"modelForFaqGenerator": {
+					"title": "{{M:bot.config.openai.property.modelForFaqGenerator.title}}",
+					"type": "string",
+					"watch": { "llms": "OpenAI.llms" },
+					"enumSource": [{ "source": "llms", "title": "{{item.llmMkey}} ({{item.serviceProvider}})", "value": "{{item.llmMkey}}" }],
+					"propertyOrder": 28
+				},
+				"enableGenerateAnswerFromStandardQ": {
+					"title": "{{M:bot.config.openai.property.enableGenerateAnswerFromStandardQ.title}}",
+					"options": { "infoText": "{{M:bot.config.openai.property.enableGenerateAnswerFromStandardQ.desc}}" },
+					"type": "boolean",
+					"format": "checkbox",
+					"propertyOrder": 30
+				},
+				"instructionForGenerateAnswerFromStandardQ": {
+					"title": "{{M:bot.config.openai.property.instructionForGenerateAnswerFromStandardQ.title}}",
+					"options": {
+						"infoText": "{{M:bot.config.openai.property.instructionForGenerateAnswerFromStandardQ.desc}}",
+						"dependencies": { "enableGenerateAnswerFromStandardQ": true } },
+					"type": "string",
+					"format": "textarea",
+					"propertyOrder": 31
+				},
+				"modelForGenerateAnswerFromStandardQ": {
+					"title": "{{M:bot.config.openai.property.modelForGenerateAnswerFromStandardQ.title}}",
+					"watch": { "llms": "OpenAI.llms" },
+					"enumSource": [{ "source": "llms", "title": "{{item.llmMkey}} ({{item.serviceProvider}})", "value": "{{item.llmMkey}}" }],
+					"options": {
+						"dependencies": { "enableGenerateAnswerFromStandardQ": true } },
+					"type": "string",
+					"propertyOrder": 32
+				},
+				"fineTuneAnswerPersona": {
+					"type": "array",
+					"title": "{{M:bot.config.openai.property.fineTuneAnswerPersona.title}}",
+					"description": "{{M:bot.config.openai.property.fineTuneAnswerPersona.desc}}" ,
+					"propertyOrder": 100,
+					"format": "tabs",
+					"items": {
+						"title": "{{M:bot.config.openai.property.fineTuneAnswerPersona.title}}",
+						"type": "object",
+						"properties": {
+							"buttonLabel": {
+								"type": "string",
+								"title": "{{M:bot.config.openai.property.fineTuneAnswerPersona.item.buttonLabel.title}}",
+								"description": "{{M:bot.config.openai.property.fineTuneAnswerPersona.item.buttonLabel.desc}}"
+							},
+							"personaInstruction": {
+								"type": "string",
+								"title": "{{M:bot.config.openai.property.fineTuneAnswerPersona.item.personaInstruction.title}}",
+								"description": "{{M:bot.config.openai.property.fineTuneAnswerPersona.item.personaInstruction.desc}}"
+							}
+						}
+					}
+				},
+				"voicemailCategory": {
+					"type": "array",
+					"title": "{{M:bot.config.openai.property.voicemailCategory.title}}",
+					"description": "{{M:bot.config.openai.property.voicemailCategory.desc}}" ,
+					"propertyOrder": 100,
+					"format": "tabs",
+					"items": {
+						"title": "{{M:bot.config.openai.property.voicemailCategory.title}}",
+						"type": "object",
+						"properties": {
+							"categoryName": {
+								"type": "string",
+								"title": "{{M:bot.config.openai.property.voicemailCategory.item.categoryName.title}}",
+								"description": "{{M:bot.config.openai.property.voicemailCategory.item.categoryName.desc}}"
+							},
+							"notifyUserClue": {
+								"type": "string",
+								"title": "{{M:bot.config.openai.property.voicemailCategory.item.notifyUserClue.title}}",
+								"description": "{{M:bot.config.openai.property.voicemailCategory.item.notifyUserClue.desc}}"
+							},
+							"notifyTextMessageTemplate": {
+								"type": "string",
+								"format": "textarea",
+								"title": "{{M:bot.config.openai.property.voicemailCategory.item.notifyTextMessageTemplate.title}}",
+								"description": "{{M:bot.config.openai.property.voicemailCategory.item.notifyTextMessageTemplate.desc}}"
+							},
+							"notifyRichMessageTemplate": {
+								"type": "string",
+								"format": "textarea",
+								"title": "{{M:bot.config.openai.property.voicemailCategory.item.notifyRichMessageTemplate.title}}",
+								"description": "{{M:bot.config.openai.property.voicemailCategory.item.notifyRichMessageTemplate.desc}}"
+							}
+						}
+					}
+				},
+				"semanticSearch": {
+					"type": "object",
+					"title":"Semantic Search {{M:global.setting}}",
+					"propertyOrder": 150,
+					"defaultProperties": [
+						"chunkSize",
+						"overlaySize",
+						"toleranceSize",
+						"embeddingDimensions",
+						"openAiEmbeddingModelForDoc",
+						"openAiEmbeddingModelForQuery"
+					],
+					"properties": {
+						"maxParsedTextLength": { "default": 10485760, "type": "integer", "description":"Maximum length of the strings returned when extract text from file", "propertyOrder": 2},
+						"desc": { "type": "string", "title":"{{M:bot.config.property.desc.title}}", "description":"Semantic Search {{M:bot.config.property.desc.desc}}", "propertyOrder": 5},
+						"chunkSize": { "type": "integer", "description":"Chunk Size", "default": 800, "propertyOrder": 10},
+						"overlaySize": { "type": "integer", "description":"Overlay Size", "default": 200, "propertyOrder": 20},
+						"toleranceSize": { "type": "integer", "description":"Tolerance Size", "default": 200, "propertyOrder": 25},
+						"embeddingDimensions": { "type": "integer", "description":"Embedding Dimensions", "default": 1536, "propertyOrder": 30},
+						"defaultChannel": { "type": "string", "description":"Default channel for Semantic Search, use 'web' if empty", "propertyOrder": 35},
+						"openAiEmbeddingModelForDoc": { "type": "string", "description":"OpenAI Embedding Model for Document", "default": "text-embedding-ada-002", "propertyOrder": 40},
+						"openAiEmbeddingModelForQuery": { "type": "string", "description":"OpenAI Embedding Model for Query", "default": "text-embedding-ada-002", "propertyOrder": 45}
+					}
+				},
+				"llmServices": {
+					"type": "array",
+					"title": "{{M:bot.config.openai.property.llmServices.title}}",
+					"description": "{{M:bot.config.openai.property.llmServices.desc}}" ,
+					"propertyOrder": 200,
+					"format": "tabs-top",
+					"items": {
+						"title": "{{M:bot.config.openai.property.llmServices.title}}",
+						"headerTemplate": "{{ self.serviceMkey }}",
+						"type": "object",
+						"defaultProperties": [
+							"serviceMkey",
+							"serviceName",
+							"serviceType",
+							"apikeyOrCredential",
+							"resourceName",
+							"apiSpec",
+							"defaultTimeout",
+							"endpoint"
+						],
+						"properties": {
+							"serviceMkey": {
+								"type": "string",
+								"propertyOrder": 1,
+								"title": "{{M:bot.config.openai.property.llmServices.item.serviceMkey.title}}",
+								"description": "{{M:bot.config.openai.property.llmServices.item.serviceMkey.desc}}"
+							},
+							"serviceName": {
+								"type": "string",
+								"title": "{{M:bot.config.openai.property.llmServices.item.serviceName.title}}",
+								"description": "{{M:bot.config.openai.property.llmServices.item.serviceName.desc}}"
+							},
+							"serviceType": {
+								"title": "Choose AIGC service type",
+								"propertyOrder": 8,
+								"description": "Use OpenAI / Azure OpenAI / Google Vertex AI / Custom LLM services, etc.",
+								"type": "enum",
+								"enumSource": [{
+									"source": [
+										"AZURE_OPENAI",
+										"VERTEX_AI",
+										"OPENAI",
+										"CUSTOM"
+									],
+									"title": "{{item}}",
+									"value": "{{item}}"
+								}]
+							},
+							"apikeyOrCredential": { "type": "string", "format": "textarea","title": "APIKEY",
+								"options": { "infoText": "APIKEY from Azure OpenAI & OpenAI, Google credential for Vertex AI, required when using Cloud LLM service" },
+								"propertyOrder": 10},
+							"resourceName": { "type": "string", "title": "Azure Resource Name", "description": "Required when using Azure OpenAI service",
+								"options": { "dependencies": { "serviceType": "AZURE_OPENAI" } },
+								"propertyOrder": 13},
+							"apiSpec": {
+								"title": "Choose api spec",
+								"propertyOrder": 15,
+								"description": "Use OpenAI / Azure OpenAI / Google Vertex AI / Custom LLM services, etc.",
+								"options": { "dependencies": { "serviceType": "CUSTOM" } },
+								"type": "enum",
+								"enumSource": [{
+									"source": [
+										"CUSTOM",
+										"AZURE_OPENAI",
+										"OPENAI",
+										"VERTEX_AI"
+									],
+									"title": "{{item}}",
+									"value": "{{item}}"
+								}]
+							},
+							"defaultTimeout": {
+								"title": "API Timeout",
+								"options": { "infoText": "Seconds allowed when calling AIGC API, default 20s" },
+								"type": "integer",
+								"propertyOrder": 16
+							},
+							"endpoint": {
+								"type": "string",
+								"format": "url",
+								"title": "{{M:bot.config.openai.property.llmServices.item.endpoint.title}}",
+								"options": {
+									"infoText": "{{M:bot.config.openai.property.llmServices.item.endpoint.desc}}",
+									"dependencies": { "serviceType": "CUSTOM" } }
+							}
+						}
+					}
+				},
+				"llms": {
+					"type": "array",
+					"title": "{{M:bot.config.openai.property.llms.title}}",
+					"description": "{{M:bot.config.openai.property.llms.desc}}" ,
+					"propertyOrder": 200,
+					"format": "tabs-top",
+					"items": {
+						"title": "{{M:bot.config.openai.property.llms.title}}",
+						"headerTemplate": "{{ self.llmMkey }}",
+						"type": "object",
+						"defaultProperties": [
+							"llmMkey",
+							"serviceProvider",
+							"modelName",
+							"modelType",
+							"promptTokensPrice",
+							"completionTokensPrice"
+						],
+						"properties": {
+							"llmMkey": {
+								"type": "string",
+								"propertyOrder": 1,
+								"title": "{{M:bot.config.openai.property.llms.item.llmMkey.title}}",
+								"description": "{{M:bot.config.openai.property.llms.item.llmMkey.desc}}"
+							},
+							"serviceProvider": {
+								"type": "string",
+								"title": "{{M:bot.config.openai.property.llms.item.serviceProvider.title}}",
+								"description": "{{M:bot.config.openai.property.llms.item.serviceProvider.desc}}",
+								"watch": {
+									"providers": "OpenAI.llmServices"
+								},
+								"enumSource": [{
+									"source": "providers",
+									"title": "{{item.serviceName}} ({{item.serviceMkey}})",
+									"value": "{{item.serviceMkey}}"
+								}]
+							},
+							"modelName": {
+								"type": "string",
+								"title": "{{M:bot.config.openai.property.llms.item.modelName.title}}",
+								"options": { "infoText": "{{M:bot.config.openai.property.llms.item.modelName.desc}}" }
+							},
+							"modelType": {
+								"type": "enum",
+								"title": "{{M:bot.config.openai.property.llms.item.modelType.title}}",
+								"description": "{{M:bot.config.openai.property.llms.item.modelType.desc}}",
+								"enumSource": [{
+									"source": [
+										"CHAT_COMPLETION",
+										"TEXT_COMPLETION",
+										"TEXT_EMBEDDING",
+										"WHISPER",
+										"CREATE_IMAGE",
+										"CREATE_IMAGE_EDIT",
+										"CREATE_IMAGE_VARIATION"
+									],
+									"title": "{{item}}",
+									"value": "{{item}}"
+								}]
+							},
+							"promptTokensPrice": {
+								"type": "string",
+								"title": "{{M:bot.config.openai.property.llms.item.promptTokensPrice.title}}",
+								"options": { "infoText": "{{M:bot.config.openai.property.llms.item.promptTokensPrice.desc}}" }
+							},
+							"completionTokensPrice": {
+								"type": "string",
+								"title": "{{M:bot.config.openai.property.llms.item.completionTokensPrice.title}}",
+								"options": { "infoText": "{{M:bot.config.openai.property.llms.item.completionTokensPrice.desc}}" }
+							}
+						}
+					}
+				}
+			}
+		},
+		"BronciAutomaticSpeechRecognition": {
+			"type": "object",
+			"title":"Bronci ASR {{M:global.setting}}",
+			"properties": {
+				"host": { "type": "string", "title": "Host", "description": "Bronci ASR Api Host", "propertyOrder": 5 },
+				"username": { "type": "string", "title": "Username", "description": "Bronci ASR username for login", "propertyOrder": 5 },
+				"password": { "type": "string", "title": "Password", "description": "Bronci ASR password for login", "propertyOrder": 5 }
+			}
+		}
+	}
+}
