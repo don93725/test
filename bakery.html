@@ -202,11 +202,13 @@ function updateButtonState() {
 function showResult() {
   let correct = 0;
   let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
+  let answerRec = JSON.parse(localStorage.getItem('answerRec')) || {};
   let correctScore = JSON.parse(localStorage.getItem('perfectScoreCount')) || 0;
   let resultHTML = "";
 
   selected.forEach((q, idx) => {
     const isCorrect = userAnswers[idx] === q.answer;
+    answerRec[q.q] = (answerRec[q.q] || 0) + 1;
     if (!isCorrect) { errorData[q.q] = (errorData[q.q] || 0) + 1; }
     if (isCorrect) {
       correct++;
@@ -226,6 +228,7 @@ function showResult() {
   }
 
   localStorage.setItem('errorCount', JSON.stringify(errorData));
+  localStorage.setItem('answerRec', JSON.stringify(answerRec));
   document.getElementById("quiz").innerHTML = "";
   document.getElementById("progressFill").style.width = "100%";
   document.getElementById("result").innerHTML = `<h2>作答完成！答對 ${correct}/${selected.length} 題</h2><h3>完美通關次數：${correctScore} 次</h3>` + resultHTML;
@@ -274,7 +277,7 @@ function clearErrorData() {
 
 function startErrorPractice() {
   let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
-  const errorArray = pickRandomQuestions(errorData, 5);
+  const errorArray =  Object.entries(errorData).sort((a, b) => b[1] - a[1]).slice(0, 5);
   const topQuestions = errorArray.map(([q]) => q);
   if (topQuestions.length == 0) { alert('目前沒有錯題可以練習！'); return; }
   selected = questions.filter(q => topQuestions.includes(q.q));
@@ -289,13 +292,13 @@ function startErrorPractice() {
 
 function startUnansweredPractice() {
   isUnansweredMode = true;
-  let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
-  selected = questions.filter(q => !(q.q in errorData));
+  let answerRec = JSON.parse(localStorage.getItem('answerRec')) || {};
+  selected = questions.filter(q => !(q.q in answerRec));
   if (selected.length === 0) {
     alert("目前所有題目都已經作答過囉！");
     return;
   }
-  selected = pickRandomQuestions(errorData, 10);
+  selected = pickRandomQuestions(selected, 10);
   shuffle(selected);
   currentIndex = 0; userAnswers = [];
   document.getElementById("result").innerHTML = "";
