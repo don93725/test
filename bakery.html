@@ -52,6 +52,20 @@
     .third { background: #ffb3b3; }
     .progress-bar { width: 100%; background: #ffe6d5; height: 20px; border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
     .progress-fill { height: 100%; width: 0%; background: linear-gradient(to right, #ff9a8b, #ff6a88); transition: width 0.4s; }
+    .options label {
+      display: block;
+      background: #fff0e6;
+      border: 2px solid #ffc2b3;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .options label:hover {
+      background: #ffe6d5;
+      transform: scale(1.02);
+    }
   </style>
 </head>
 <body>
@@ -60,14 +74,17 @@
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   <div id="status" style="margin: 10px 0; font-size: 18px; text-align: center;"></div>
   <div id="quiz"></div>
-  <button id="nextBtn" onclick="nextQuestion()">開始測驗</button>
-  <button onclick="showErrorRanking()">錯題排行榜</button>
-  <button onclick="clearErrorData()">清除錯題紀錄</button>
-  <button onclick="startErrorPractice()">錯題練習</button>
-  <button onclick="startUnansweredPractice()">未作答練習</button>
+  <div id="buttonArea">
+    <button id="nextBtn" onclick="nextQuestion()">開始測驗</button>
+    <button onclick="showErrorRanking()">錯題排行榜</button>
+    <button onclick="clearErrorData()">清除錯題紀錄</button>
+    <button onclick="startErrorPractice()">錯題練習</button>
+    <button onclick="startUnansweredPractice()">未作答練習</button>
+  </div>
   <div class="result" id="result"></div>
   <canvas id="pieChart" width="400" height="400" style="display:none;"></canvas>
 </div>
+
 <script>
 let questions = [];
 let selected = [];
@@ -101,6 +118,7 @@ async function startQuiz() {
   document.getElementById("nextBtn").onclick = nextQuestion;
   updateStatus();
   showQuestion();
+  removeBackToQuizButton();
 }
 
 function shuffle(array) {
@@ -177,45 +195,6 @@ function drawPie(correct, wrong) {
   });
 }
 
-function showErrorRanking() {
-  const errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
-  const errorArray = Object.entries(errorData).sort((a,b)=>b[1]-a[1]);
-  if (errorArray.length==0) { document.getElementById("result").innerHTML = "<h2>目前無錯題紀錄！</h2>"; return; }
-  const html = errorArray.map(([qText, count], i) => {
-    const question = questions.find(q => q.q === qText);
-    const correctAns = question ? question.options[question.answer] : '(找不到正確答案)';
-    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
-    return `<div class='ranking-entry ${i===0?'first':i===1?'second':i===2?'third':''}'>
-      <div>${medal} ${qText}<br>正確答案：${correctAns}</div>
-      <div style='font-size:20px;'>${count}</div>
-    </div>`;
-  }).join('');
-  document.getElementById("result").innerHTML = `<h2>錯題排行榜</h2>${html}`;
-}
-
-function clearErrorData() {
-  if (confirm("確定清除所有錯題紀錄？")) {
-    localStorage.removeItem('errorCount');
-    alert("錯題紀錄已清除！");
-    document.getElementById("result").innerHTML = "<h2>錯題紀錄已清除！</h2>";
-  }
-}
-
-function startErrorPractice() {
-  let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
-  const errorArray = Object.entries(errorData).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const topQuestions = errorArray.map(([q])=>q);
-  if (topQuestions.length==0) { alert('目前沒有錯題可以練習！'); return; }
-  selected = questions.filter(q => topQuestions.includes(q.q));
-  shuffle(selected);
-  currentIndex = 0; userAnswers = []; isErrorPracticeMode = true;
-  document.getElementById("result").innerHTML = "";
-  document.getElementById("nextBtn").innerText = "下一題";
-  document.getElementById("nextBtn").onclick = nextQuestion;
-  updateStatus();
-  showQuestion();
-}
-
 function startUnansweredPractice() {
   isUnansweredMode = true;
   let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
@@ -229,8 +208,23 @@ function startUnansweredPractice() {
   document.getElementById("result").innerHTML = "";
   document.getElementById("nextBtn").innerText = "下一題";
   document.getElementById("nextBtn").onclick = nextQuestion;
+  addBackToQuizButton();
   updateStatus();
   showQuestion();
+}
+
+function addBackToQuizButton() {
+  removeBackToQuizButton();
+  const backButton = document.createElement('button');
+  backButton.id = 'backBtn';
+  backButton.innerText = '返回隨機測驗';
+  backButton.onclick = startQuiz;
+  document.getElementById('buttonArea').appendChild(backButton);
+}
+
+function removeBackToQuizButton() {
+  const backBtn = document.getElementById('backBtn');
+  if (backBtn) backBtn.remove();
 }
 
 function updateStatus() {
