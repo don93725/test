@@ -65,6 +65,10 @@
   }
   .correct { background: #e0ffe0; border: 1px solid #50d050; padding: 15px; border-radius: 10px; margin-top: 15px; }
   .wrong { background: #ffe0e0; border: 1px solid #ff6060; padding: 15px; border-radius: 10px; margin-top: 15px; }
+  .ranking-entry { background: #fff4f0; padding: 12px; border-radius: 8px; margin: 8px 0; }
+  .first { background: #ffe066; font-weight: bold; }
+  .second { background: #ffcc99; }
+  .third { background: #ffb3b3; }
   .result { margin-top: 30px; }
   .progress-bar {
     width: 100%;
@@ -91,6 +95,7 @@
   <button onclick="showErrorRanking()">錯題排行榜</button>
   <button onclick="clearErrorData()">清除錯題紀錄</button>
   <button onclick="startErrorPractice()">錯題練習</button>
+  <button onclick="startUnansweredPractice()">未作答練習</button>
   <div class="result" id="result"></div>
   <canvas id="pieChart" width="400" height="400" style="display:none;"></canvas>
 </div>
@@ -103,11 +108,14 @@ let currentIndex = 0;
 let userAnswers = [];
 let isErrorPracticeMode = false;
 
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+function pickRandomQuestions(array, count) {
+  const picked = [];
+  const copy = [...array];
+  while (picked.length < count && copy.length > 0) {
+    const idx = Math.floor(Math.random() * copy.length);
+    picked.push(copy.splice(idx, 1)[0]);
   }
+  return picked;
 }
 
 async function startQuiz() {
@@ -115,20 +123,13 @@ async function startQuiz() {
     const response = await fetch('questions.json');
     questions = await response.json();
   }
-  const easy = questions.filter(q => q.difficulty === 'easy');
-  const medium = questions.filter(q => q.difficulty === 'medium');
-  const hard = questions.filter(q => q.difficulty === 'hard');
-  if (easy.length < 3 || medium.length < 3 || hard.length < 4) {
-    alert('題庫數量不足！'); return;
-  }
-  shuffle(easy); shuffle(medium); shuffle(hard);
-  selected = [...easy.slice(0,3), ...medium.slice(0,3), ...hard.slice(0,4)];
-  shuffle(selected);
+  selected = pickRandomQuestions(questions, 10);
   currentIndex = 0; userAnswers = [];
   isErrorPracticeMode = false;
   document.getElementById("result").innerHTML = "";
   document.getElementById("pieChart").style.display = "none";
   document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
   showQuestion();
 }
 
@@ -155,22 +156,29 @@ function nextQuestion() {
 function showResult() {
   let correct = 0;
   let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
+  let correctScore = JSON.parse(localStorage.getItem('perfectScoreCount')) || 0;
   let resultHTML = "";
   selected.forEach((q, idx) => {
     const isCorrect = userAnswers[idx] === q.answer;
     if (!isCorrect) { errorData[q.q] = (errorData[q.q]||0)+1; }
     if (isCorrect) {
       correct++;
-      resultHTML += `<div class='correct'><p>第${idx+1}題 答對</p><p>${q.q}</p></div>`;
+      resultHTML += `<div class='correct'><p>第 ${idx + 1} 題 答對！</p><p>題目：${q.q}</p></div>`;
     } else {
-      let hint = errorData[q.q]>=5 ? "<p style='color:red;'>⚡ 此題已錯 ${errorData[q.q]} 次，加強練習！</p>" : "<p>別氣餒，再試一次！</p>";
-      resultHTML += `<div class='wrong'><p>第${idx+1}題 錯誤</p><p>${q.q}</p>${hint}</div>`;
+      resultHTML += `<div class='wrong'><p>第 ${idx + 1} 題 錯誤！</p><p>題目：${q.q}</p></div>`;
     }
   });
+  if (correct === selected.length) {
+    correctScore++;
+    localStorage.setItem('perfectScoreCount', correctScore);
+    alert('🎉 恭喜！完美通過！');
+  } else {
+    localStorage.setItem('perfectScoreCount', correctScore);
+  }
   localStorage.setItem('errorCount', JSON.stringify(errorData));
   document.getElementById("quiz").innerHTML = "";
   document.getElementById("progressFill").style.width = "100%";
-  document.getElementById("result").innerHTML = `<h2>作答完成！答對 ${correct}/${selected.length} 題</h2>` + resultHTML;
+  document.getElementById("result").innerHTML = `<h2>作答完成！答對 ${correct}/${selected.length} 題</h2><h3>完美通過次數：${correctScore} 次</h3>` + resultHTML;
   document.getElementById("nextBtn").innerText = "重新測驗";
   document.getElementById("nextBtn").onclick = startQuiz;
   drawPie(correct, selected.length-correct);
@@ -192,7 +200,8 @@ function showErrorRanking() {
   const errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
   const errorArray = Object.entries(errorData).sort((a,b)=>b[1]-a[1]);
   if (errorArray.length==0) { document.getElementById("result").innerHTML = "<h2>目前無錯題紀錄！</h2>"; return; }
-  document.getElementById("result").innerHTML = `<h2>錯題排行榜</h2>${errorArray.map(([q,c],i)=>`<p>${i+1}. ${q}（錯${c}次）</p>`).join('')}`;
+  document.getElementById("result").innerHTML = `<h2>錯題排行榜</h2>
+    ${errorArray.map(([q,c],i)=>`<div class='ranking-entry ${i===0?'first':i===1?'second':i===2?'third':''}'>${i+1}位🏆 ${q}<br>錯誤次數：${c}</div>`).join('')}`;
 }
 
 function clearErrorData() {
@@ -213,11 +222,27 @@ async function startErrorPractice() {
   currentIndex = 0; userAnswers = []; isErrorPracticeMode = true;
   document.getElementById("result").innerHTML = "";
   document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
+  showQuestion();
+}
+
+async function startUnansweredPractice() {
+  let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
+  let correctScore = JSON.parse(localStorage.getItem('perfectScoreCount')) || {};
+  selected = questions.filter(q => !(q.q in errorData));
+  if (selected.length === 0) {
+    alert("目前所有題目都已經作答過囉！");
+    return;
+  }
+  shuffle(selected);
+  currentIndex = 0; userAnswers = []; isErrorPracticeMode = true;
+  document.getElementById("result").innerHTML = "";
+  document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
   showQuestion();
 }
 
 startQuiz();
 </script>
-
 </body>
 </html>
