@@ -24,6 +24,16 @@
       color: #ff7e5f;
       text-align: center;
     }
+    .question {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .difficulty {
+      font-size: 14px;
+      color: gray;
+      margin-bottom: 20px;
+    }
     button {
       background: #ff7e5f;
       color: white;
@@ -113,12 +123,22 @@ let userAnswers = [];
 let isErrorPracticeMode = false;
 let isUnansweredMode = false;
 
+function pickRandomQuestions(array, count) {
+  const picked = [];
+  const copy = [...array];
+  while (picked.length < count && copy.length > 0) {
+    const idx = Math.floor(Math.random() * copy.length);
+    picked.push(copy.splice(idx, 1)[0]);
+  }
+  return picked;
+}
+
 async function startQuiz() {
   if (questions.length === 0) {
     const response = await fetch('questions.json');
     questions = await response.json();
   }
-  selected = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+  selected = pickRandomQuestions(questions, 10);
   currentIndex = 0; userAnswers = [];
   isErrorPracticeMode = false;
   isUnansweredMode = false;
@@ -254,7 +274,7 @@ function clearErrorData() {
 
 function startErrorPractice() {
   let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
-  const errorArray = Object.entries(errorData).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const errorArray = pickRandomQuestions(errorData, 5);
   const topQuestions = errorArray.map(([q]) => q);
   if (topQuestions.length == 0) { alert('目前沒有錯題可以練習！'); return; }
   selected = questions.filter(q => topQuestions.includes(q.q));
@@ -275,6 +295,7 @@ function startUnansweredPractice() {
     alert("目前所有題目都已經作答過囉！");
     return;
   }
+  selected = pickRandomQuestions(errorData, 10);
   shuffle(selected);
   currentIndex = 0; userAnswers = [];
   document.getElementById("result").innerHTML = "";
