@@ -92,7 +92,7 @@
     <button id="prevBtn" onclick="prevQuestion()">上一題</button>
   </div>
   <div id="quiz"></div>
-  <div class="button-row">
+  <div id="buttonArea" class="button-row">
     <button id="nextBtn" onclick="nextQuestion()">開始測驗</button>
     <button onclick="showErrorRanking()">錯題排行榜</button>
     <button onclick="clearErrorData()">清除錯題紀錄</button>
@@ -291,7 +291,7 @@ function addBackToQuizButton() {
   backButton.id = 'backBtn';
   backButton.innerText = '返回隨機測驗';
   backButton.onclick = startQuiz;
-  document.getElementById('button-row').appendChild(backButton);
+  document.getElementById('buttonArea').appendChild(backButton);
 }
 
 function removeBackToQuizButton() {
