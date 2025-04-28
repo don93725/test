@@ -32,12 +32,22 @@
       font-size: 16px;
       border-radius: 10px;
       cursor: pointer;
-      margin: 10px 5px 0 0;
+      margin: 10px 5px 10px 0;
       transition: all 0.3s;
     }
     button:hover {
       background: #ff5c3a;
       transform: scale(1.05);
+    }
+    .button-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .other-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
     }
     .correct, .wrong, .ranking-entry {
       padding: 15px;
@@ -75,9 +85,11 @@
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   <div id="status" style="margin: 10px 0; font-size: 18px; text-align: center;"></div>
   <div id="quiz"></div>
-  <div id="buttonArea">
+  <div class="button-row">
     <button id="prevBtn" onclick="prevQuestion()">上一題</button>
     <button id="nextBtn" onclick="nextQuestion()">開始測驗</button>
+  </div>
+  <div class="other-buttons">
     <button onclick="showErrorRanking()">錯題排行榜</button>
     <button onclick="clearErrorData()">清除錯題紀錄</button>
     <button onclick="startErrorPractice()">錯題練習</button>
