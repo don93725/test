@@ -69,7 +69,181 @@
   <canvas id="pieChart" width="400" height="400" style="display:none;"></canvas>
 </div>
 <script>
-// 此處放你的整段腳本（包含 pickRandomQuestions、startQuiz、showErrorRanking、startUnansweredPractice、showResult、updateStatus 等函式）
+let questions = [];
+let selected = [];
+let currentIndex = 0;
+let userAnswers = [];
+let isErrorPracticeMode = false;
+let isUnansweredMode = false;
+
+function pickRandomQuestions(array, count) {
+  const picked = [];
+  const copy = [...array];
+  while (picked.length < count && copy.length > 0) {
+    const idx = Math.floor(Math.random() * copy.length);
+    picked.push(copy.splice(idx, 1)[0]);
+  }
+  return picked;
+}
+
+async function startQuiz() {
+  if (questions.length === 0) {
+    const response = await fetch('questions.json');
+    questions = await response.json();
+  }
+  selected = pickRandomQuestions(questions, 10);
+  currentIndex = 0; userAnswers = [];
+  isErrorPracticeMode = false;
+  isUnansweredMode = false;
+  document.getElementById("result").innerHTML = "";
+  document.getElementById("pieChart").style.display = "none";
+  document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
+  updateStatus();
+  showQuestion();
+}
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function showQuestion() {
+  const quizDiv = document.getElementById("quiz");
+  const q = selected[currentIndex];
+  document.getElementById("progressFill").style.width = ((currentIndex/selected.length)*100)+"%";
+  quizDiv.innerHTML = `<div class="question">(${currentIndex+1}/${selected.length}) ${q.q}</div>
+  <div class="difficulty">難易度：${q.difficulty}</div>
+  <div class="options">
+    ${q.options.map((opt, i) => `<label><input type='radio' name='option' value='${i}'> ${opt}</label>`).join('')}
+  </div>`;
+}
+
+function nextQuestion() {
+  const selectedOption = document.querySelector("input[name='option']:checked");
+  if (!selectedOption) { alert("請先選擇答案"); return; }
+  userAnswers.push(parseInt(selectedOption.value));
+  currentIndex++;
+  if (currentIndex < selected.length) showQuestion();
+  else showResult();
+}
+
+function showResult() {
+  let correct = 0;
+  let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
+  let correctScore = JSON.parse(localStorage.getItem('perfectScoreCount')) || 0;
+  let resultHTML = "";
+  selected.forEach((q, idx) => {
+    const isCorrect = userAnswers[idx] === q.answer;
+    if (!isCorrect) { errorData[q.q] = (errorData[q.q]||0)+1; }
+    if (isCorrect) {
+      correct++;
+      resultHTML += `<div class='correct'><p>第 ${idx + 1} 題 答對！</p><p>題目：${q.q}</p></div>`;
+    } else {
+      resultHTML += `<div class='wrong'><p>第 ${idx + 1} 題 錯誤！</p><p>題目：${q.q}</p></div>`;
+    }
+  });
+  if (correct === selected.length) {
+    correctScore++;
+    localStorage.setItem('perfectScoreCount', correctScore);
+    alert('🎉 恭喜！完美通過！');
+  } else {
+    localStorage.setItem('perfectScoreCount', correctScore);
+  }
+  localStorage.setItem('errorCount', JSON.stringify(errorData));
+  document.getElementById("quiz").innerHTML = "";
+  document.getElementById("progressFill").style.width = "100%";
+  document.getElementById("result").innerHTML = `<h2>作答完成！答對 ${correct}/${selected.length} 題</h2><h3>完美通過次數：${correctScore} 次</h3>` + resultHTML;
+  document.getElementById("nextBtn").innerText = "重新測驗";
+  document.getElementById("nextBtn").onclick = () => {
+    isUnansweredMode = false;
+    startQuiz();
+  };
+  updateStatus();
+  drawPie(correct, selected.length-correct);
+}
+
+function drawPie(correct, wrong) {
+  document.getElementById("pieChart").style.display = "block";
+  new Chart(document.getElementById('pieChart'), {
+    type: 'pie',
+    data: {
+      labels: ['答對', '答錯'],
+      datasets: [{ data: [correct, wrong], backgroundColor: ['#a0e7a0', '#ff9999'] }]
+    },
+    options: { responsive: true, plugins: {legend:{position:'bottom'}} }
+  });
+}
+
+function showErrorRanking() {
+  const errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
+  const errorArray = Object.entries(errorData).sort((a,b)=>b[1]-a[1]);
+  if (errorArray.length==0) { document.getElementById("result").innerHTML = "<h2>目前無錯題紀錄！</h2>"; return; }
+  const html = errorArray.map(([qText, count], i) => {
+    const question = questions.find(q => q.q === qText);
+    const correctAns = question ? question.options[question.answer] : '(找不到正確答案)';
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+    return `<div class='ranking-entry ${i===0?'first':i===1?'second':i===2?'third':''}'>
+      <div>${medal} ${qText}<br>正確答案：${correctAns}</div>
+      <div style='font-size:20px;'>${count}</div>
+    </div>`;
+  }).join('');
+  document.getElementById("result").innerHTML = `<h2>錯題排行榜</h2>${html}`;
+}
+
+function clearErrorData() {
+  if (confirm("確定清除所有錯題紀錄？")) {
+    localStorage.removeItem('errorCount');
+    alert("錯題紀錄已清除！");
+    document.getElementById("result").innerHTML = "<h2>錯題紀錄已清除！</h2>";
+  }
+}
+
+function startErrorPractice() {
+  let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
+  const errorArray = Object.entries(errorData).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const topQuestions = errorArray.map(([q])=>q);
+  if (topQuestions.length==0) { alert('目前沒有錯題可以練習！'); return; }
+  selected = questions.filter(q => topQuestions.includes(q.q));
+  shuffle(selected);
+  currentIndex = 0; userAnswers = []; isErrorPracticeMode = true;
+  document.getElementById("result").innerHTML = "";
+  document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
+  updateStatus();
+  showQuestion();
+}
+
+function startUnansweredPractice() {
+  isUnansweredMode = true;
+  let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
+  selected = questions.filter(q => !(q.q in errorData));
+  if (selected.length === 0) {
+    alert("目前所有題目都已經作答過囉！");
+    return;
+  }
+  shuffle(selected);
+  currentIndex = 0; userAnswers = [];
+  document.getElementById("result").innerHTML = "";
+  document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
+  updateStatus();
+  showQuestion();
+}
+
+function updateStatus() {
+  let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
+  let correctScore = JSON.parse(localStorage.getItem('perfectScoreCount')) || 0;
+  let unansweredCount = questions.filter(q => !(q.q in errorData)).length;
+  const statusDiv = document.getElementById("status");
+  if (statusDiv) {
+    statusDiv.innerHTML = `未作答題目數量：${unansweredCount} / 完美通關次數：${correctScore}`;
+  }
+}
+
+startQuiz();
 </script>
 </body>
 </html>
