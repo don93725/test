@@ -102,6 +102,8 @@
   <div class="result" id="result"></div>
   <canvas id="pieChart" width="400" height="400" style="display:none;"></canvas>
 </div>
+<canvas id="fireworks" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1000;display:none;"></canvas>
+
 <script>
 // 這裡將補上完整JS，包括：答題結果、錯題排行榜、練習模式、PieChart 等功能
 let questions = [];
@@ -198,6 +200,7 @@ function showResult() {
     correctScore++;
     localStorage.setItem('perfectScoreCount', correctScore);
     alert('🎉 恭喜！完美通過！');
+    launchFireworks();
   } else {
     localStorage.setItem('perfectScoreCount', correctScore);
   }
@@ -312,6 +315,56 @@ function updateStatus() {
     statusDiv.innerHTML = `未作答題目數量：${unansweredCount} / 完美通關次數：${correctScore}`;
   }
 }
+
+function launchFireworks() {
+  const canvas = document.getElementById('fireworks');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.display = 'block';
+
+  let particles = [];
+
+  for (let i = 0; i < 50; i++) {
+    particles.push({
+      x: canvas.width/2,
+      y: canvas.height/2,
+      speed: Math.random() * 5 + 2,
+      angle: Math.random() * 2 * Math.PI,
+      radius: Math.random() * 3 + 2,
+      alpha: 1,
+      decay: Math.random() * 0.02 + 0.01
+    });
+  }
+
+  function draw() {
+    ctx.fillStyle = "rgba(0,0,0,0.1)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(p => {
+      p.x += Math.cos(p.angle) * p.speed;
+      p.y += Math.sin(p.angle) * p.speed;
+      p.alpha -= p.decay;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${p.alpha})`;
+      ctx.fill();
+    });
+
+    particles = particles.filter(p => p.alpha > 0);
+
+    if (particles.length > 0) {
+      requestAnimationFrame(draw);
+    } else {
+      canvas.style.display = 'none';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  draw();
+}
+
 
 startQuiz();
 
