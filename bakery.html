@@ -100,9 +100,106 @@
 </div>
 
 <script>
-// （這裡是你的完整 JS 程式碼，已經改好，可以直接插進去）
-// 就是你現在 Canvas 裡的版本，包含 isUnansweredMode、錯題排行榜顯示正解等
+let questions = [];
+let selected = [];
+let currentIndex = 0;
+let userAnswers = [];
+let isErrorPracticeMode = false;
+let isUnansweredMode = false;
+
+function pickRandomQuestions(array, count) {
+  const picked = [];
+  const copy = [...array];
+  while (picked.length < count && copy.length > 0) {
+    const idx = Math.floor(Math.random() * copy.length);
+    picked.push(copy.splice(idx, 1)[0]);
+  }
+  return picked;
+}
+
+async function startQuiz() {
+  if (questions.length === 0) {
+    const response = await fetch('questions.json');
+    questions = await response.json();
+  }
+  selected = pickRandomQuestions(questions, 10);
+  currentIndex = 0; userAnswers = [];
+  isErrorPracticeMode = false;
+  isUnansweredMode = false;
+  document.getElementById("result").innerHTML = "";
+  document.getElementById("pieChart").style.display = "none";
+  document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
+  showQuestion();
+}
+
+function showErrorRanking() {
+  const errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
+  const errorArray = Object.entries(errorData).sort((a,b)=>b[1]-a[1]);
+  if (errorArray.length==0) { document.getElementById("result").innerHTML = "<h2>目前無錯題紀錄！</h2>"; return; }
+  const html = errorArray.map(([qText, count], i) => {
+    const question = questions.find(q => q.q === qText);
+    const correctAns = question ? question.options[question.answer] : '(找不到正確答案)';
+    return `<div class='ranking-entry ${i===0?'first':i===1?'second':i===2?'third':''}'>
+      ${i+1}位🏆 ${qText}<br>
+      錯誤次數：${count}<br>
+      正確答案：${correctAns}
+    </div>`;
+  }).join('');
+  document.getElementById("result").innerHTML = `<h2>錯題排行榜</h2>${html}`;
+}
+
+function startUnansweredPractice() {
+  isUnansweredMode = true;
+  let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
+  selected = questions.filter(q => !(q.q in errorData));
+  if (selected.length === 0) {
+    alert("目前所有題目都已經作答過囉！");
+    return;
+  }
+  shuffle(selected);
+  currentIndex = 0; userAnswers = []; 
+  document.getElementById("result").innerHTML = "";
+  document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
+  showQuestion();
+}
+
+function showResult() {
+  let correct = 0;
+  let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
+  let correctScore = JSON.parse(localStorage.getItem('perfectScoreCount')) || 0;
+  let resultHTML = "";
+  selected.forEach((q, idx) => {
+    const isCorrect = userAnswers[idx] === q.answer;
+    if (!isCorrect) { errorData[q.q] = (errorData[q.q]||0)+1; }
+    if (isCorrect) {
+      correct++;
+      resultHTML += `<div class='correct'><p>第 ${idx + 1} 題 答對！</p><p>題目：${q.q}</p></div>`;
+    } else {
+      resultHTML += `<div class='wrong'><p>第 ${idx + 1} 題 錯誤！</p><p>題目：${q.q}</p></div>`;
+    }
+  });
+  if (correct === selected.length) {
+    correctScore++;
+    localStorage.setItem('perfectScoreCount', correctScore);
+    alert('🎉 恭喜！完美通過！');
+  } else {
+    localStorage.setItem('perfectScoreCount', correctScore);
+  }
+  localStorage.setItem('errorCount', JSON.stringify(errorData));
+  document.getElementById("quiz").innerHTML = "";
+  document.getElementById("progressFill").style.width = "100%";
+  document.getElementById("result").innerHTML = `<h2>作答完成！答對 ${correct}/${selected.length} 題</h2><h3>完美通過次數：${correctScore} 次</h3>` + resultHTML;
+  document.getElementById("nextBtn").innerText = "重新測驗";
+  document.getElementById("nextBtn").onclick = () => {
+    isUnansweredMode = false;
+    startQuiz();
+  };
+  drawPie(correct, selected.length-correct);
+}
 </script>
+
 
 </body>
 </html>
