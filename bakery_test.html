@@ -236,7 +236,7 @@ function showResult() {
   if (correct === selected.length) {
     correctScore++;
     localStorage.setItem('perfectScoreCount', correctScore);
-    if(correctScore % 3 == 0) {
+    if(correctScore % 2 == 0) {
       alert('🎉 恭喜！完美通過！妳根本是神！！！請欣賞盛大煙火～～');
       launchOmgFireworks();
     } else {
@@ -355,11 +355,13 @@ function shuffle(array) {
 
 function updateStatus() {
   let answerRec = JSON.parse(localStorage.getItem('answerRec')) || {};
+  let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
   let correctScore = JSON.parse(localStorage.getItem('perfectScoreCount')) || 0;
   let unansweredCount = questions.filter(q => !(q.q in answerRec )).length;
+  let errorCount = questions.filter(q => (q.q in errorData )).length;
   const statusDiv = document.getElementById("status");
   if (statusDiv) {
-    statusDiv.innerHTML = `尚未被答對題目：${unansweredCount} / 完美通關：${correctScore}`;
+    statusDiv.innerHTML = `尚未被答對題目：${unansweredCount} / 錯題：${errorCount} / 完美通關：${correctScore}`;
   }
 }
 
