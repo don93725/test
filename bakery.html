@@ -346,9 +346,9 @@ function shuffle(array) {
 }
 
 function updateStatus() {
-  let errorData = JSON.parse(localStorage.getItem('errorCount')) || {};
+  let answerRec = JSON.parse(localStorage.getItem('answerRec')) || {};
   let correctScore = JSON.parse(localStorage.getItem('perfectScoreCount')) || 0;
-  let unansweredCount = questions.filter(q => !(q.q in errorData)).length;
+  let unansweredCount = questions.filter(q => !(q.q in answerRec )).length;
   const statusDiv = document.getElementById("status");
   if (statusDiv) {
     statusDiv.innerHTML = `未作答題目數量：${unansweredCount} / 完美通關次數：${correctScore}`;
