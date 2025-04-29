@@ -419,25 +419,32 @@ function launchOmgFireworks() {
   canvas.height = window.innerHeight;
   canvas.style.display = 'block';
 
+  const colorSets = [
+    ['#ff4d4d', '#ff6666', '#ff9999'],  // 紅系
+    ['#66ccff', '#66ffff', '#99ffff'],  // 藍系
+    ['#ffff66', '#ffcc66', '#ffd966']   // 黃系
+  ];
+
+  let currentRound = 0;
   let particles = [];
 
-  const colors = ['#ff6666', '#ffcc66', '#66ff66', '#66ccff', '#cc66ff'];
-
-  for (let i = 0; i < 500; i++) {
-    particles.push({
-      x: canvas.width / 2,
-      y: canvas.height / 2,
-      speed: Math.random() * 10 + 5,
-      angle: Math.random() * 2 * Math.PI,
-      radius: Math.random() * 3 + 2,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      alpha: 1,
-      decay: Math.random() * 0.01 + 0.003
-    });
+  function createParticles(colors) {
+    for (let i = 0; i < 900; i++) {
+      particles.push({
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        speed: Math.random() * 12 + 5,
+        angle: Math.random() * 2 * Math.PI,
+        radius: Math.random() * 3 + 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: 1,
+        decay: Math.random() * 0.02 + 0.004
+      });
+    }
   }
 
   function draw() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.08)"; // 留下光尾
+    ctx.fillStyle = "rgba(0, 0, 0, 0.02)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     particles.forEach(p => {
@@ -453,7 +460,7 @@ function launchOmgFireworks() {
 
     particles = particles.filter(p => p.alpha > 0);
 
-    if (particles.length > 0) {
+    if (particles.length > 0 || currentRound < 3) {
       requestAnimationFrame(draw);
     } else {
       canvas.style.display = 'none';
@@ -461,6 +468,17 @@ function launchOmgFireworks() {
     }
   }
 
+  function startNextRound() {
+    if (currentRound < 3) {
+      createParticles(colorSets[currentRound % colorSets.length]);
+      currentRound++;
+      setTimeout(startNextRound, 600); // 200毫秒後再爆下一輪
+    }
+  }
+
+  createParticles(colorSets[currentRound % colorSets.length]);
+  currentRound++;
+  setTimeout(startNextRound, 600);
   draw();
 }
 
