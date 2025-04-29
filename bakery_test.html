@@ -236,8 +236,13 @@ function showResult() {
   if (correct === selected.length) {
     correctScore++;
     localStorage.setItem('perfectScoreCount', correctScore);
-    alert('🎉 恭喜！完美通過！');
-    launchFireworks();
+    if(correctScore % 3 == 0) {
+      alert('🎉 恭喜！完美通過！妳根本是神！！！請欣賞盛大煙火～～');
+      launchOmgFireworks();
+    } else {
+      alert('🎉 恭喜！完美通過！');
+      launchFireworks();
+    }
   } else {
     localStorage.setItem('perfectScoreCount', correctScore);
   }
@@ -391,6 +396,58 @@ function launchFireworks() {
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
       ctx.fillStyle = `rgba(255,${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${p.alpha})`;
+      ctx.fill();
+    });
+
+    particles = particles.filter(p => p.alpha > 0);
+
+    if (particles.length > 0) {
+      requestAnimationFrame(draw);
+    } else {
+      canvas.style.display = 'none';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  draw();
+}
+
+function launchOmgFireworks() {
+  const canvas = document.getElementById('fireworks');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.display = 'block';
+
+  let particles = [];
+
+  const colors = ['#ff6666', '#ffcc66', '#66ff66', '#66ccff', '#cc66ff'];
+
+  for (let i = 0; i < 500; i++) {
+    particles.push({
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      speed: Math.random() * 10 + 5,
+      angle: Math.random() * 2 * Math.PI,
+      radius: Math.random() * 3 + 2,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: 1,
+      decay: Math.random() * 0.01 + 0.003
+    });
+  }
+
+  function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.08)"; // 留下光尾
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(p => {
+      p.x += Math.cos(p.angle) * p.speed;
+      p.y += Math.sin(p.angle) * p.speed;
+      p.alpha -= p.decay;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color.replace(')', `,${p.alpha})`).replace('rgb', 'rgba');
       ctx.fill();
     });
 
