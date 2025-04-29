@@ -210,11 +210,26 @@ function showResult() {
     const isCorrect = userAnswers[idx] === q.answer;
     answerRec[q.q] = (answerRec[q.q] || 0) + 1;
     if (!isCorrect) { errorData[q.q] = (errorData[q.q] || 0) + 1; }
+    /*
     if (isCorrect) {
       correct++;
       resultHTML += `<div class='correct'><p>第 ${idx + 1} 題 答對！</p><p>題目：${q.q}</p></div>`;
     } else {
       resultHTML += `<div class='wrong'><p>第 ${idx + 1} 題 錯誤！</p><p>題目：${q.q}</p></div>`;
+    }*/
+    if (isCorrect) {
+      correct++;
+      resultHTML += `<div class='correct'><p>第 ${idx + 1} 題 答對！</p>
+      <p>題目：${q.q}</p>
+      <p>難易度：${q.difficulty}</p>
+      <p>正確答案：${q.options[q.answer]}</p></div><hr>`;
+    } else {
+      resultHTML += `<div class='wrong'><p>第 ${idx + 1} 題 錯誤！</p>
+      <p>題目：${q.q}</p>
+      <p>難易度：${q.difficulty}</p>
+      <p>選項：${q.options.map((opt, i) => `${i + 1}. ${opt}`).join(' / ')}</p>
+      <p>你的答案：${q.options[userAnswers[idx]] || "未作答"}</p>
+      <p>正確答案：${q.options[q.answer]}</p></div><hr>`;
     }
   });
 
