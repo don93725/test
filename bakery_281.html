@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>焙烤食品 丙級測驗</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #fefaf6;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #ff7e5f;
+      text-align: center;
+    }
+    .question {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .difficulty {
+      font-size: 14px;
+      color: gray;
+      margin-bottom: 20px;
+    }
+    button {
+      background: #ff7e5f;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 10px 5px 10px 0;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background: #ff5c3a;
+      transform: scale(1.05);
+    }
+    .button-row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    .other-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .correct, .wrong, .ranking-entry {
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+    .correct { background: #e0ffe0; border: 1px solid #50d050; }
+    .wrong { background: #ffe0e0; border: 1px solid #ff6060; }
+    .ranking-entry { background: #fff4f0; display: flex; justify-content: space-between; align-items: center; }
+    .first { background: #ffe066; }
+    .second { background: #ffcc99; }
+    .third { background: #ffb3b3; }
+    .progress-bar { width: 100%; background: #ffe6d5; height: 20px; border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(to right, #ff9a8b, #ff6a88); transition: width 0.4s; }
+    .options label {
+      display: block;
+      background: #fff0e6;
+      border: 2px solid #ffc2b3;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .options label:hover {
+      background: #ffe6d5;
+      transform: scale(1.02);
+    }
+    #prevBtn.invisible {
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>焙烤食品 丙級測驗</h1>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div id="status" style="margin: 10px 0; font-size: 18px; text-align: center;"></div>
+  <div>
+    <button id="prevBtn" onclick="prevQuestion()">上一題</button>
+  </div>
+  <div id="quiz"></div>
+  <div id="buttonArea" class="button-row">
+    <button id="nextBtn" onclick="nextQuestion()">開始測驗</button>
+    <button onclick="showErrorRanking()">錯題排行榜</button>
+    <button onclick="clearErrorData()">清除作題紀錄</button>
+    <button onclick="startErrorPractice()">錯題練習</button>
+    <button onclick="startUnansweredPractice()">未作答練習</button>
+  </div>
+  <div class="result" id="result"></div>
+  <canvas id="pieChart" width="400" height="400" style="display:none;"></canvas>
+</div>
+<canvas id="fireworks" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1000;display:none;"></canvas>
+
+<script>
+// 這裡將補上完整JS，包括：答題結果、錯題排行榜、練習模式、PieChart 等功能
+let questions = [];
+let selected = [];
+let currentIndex = 0;
+let userAnswers = [];
+let isErrorPracticeMode = false;
+let isUnansweredMode = false;
+
+function pickRandomQuestions(array, count) {
+  const picked = [];
+  const copy = [...array];
+  while (picked.length < count && copy.length > 0) {
+    const idx = Math.floor(Math.random() * copy.length);
+    picked.push(copy.splice(idx, 1)[0]);
+  }
+  return picked;
+}
+
+async function startQuiz() {
+  if (questions.length === 0) {
+    const response = await fetch('https://don93725.github.io/test/questions_281.json');
+    questions = await response.json();
+  }
+  selected = pickRandomQuestions(questions, 10);
+  currentIndex = 0; userAnswers = [];
+  isErrorPracticeMode = false;
+  isUnansweredMode = false;
+  document.getElementById("result").innerHTML = "";
+  document.getElementById("pieChart").style.display = "none";
+  document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
+  updateStatus();
+  showQuestion();
+  removeBackToQuizButton();
+  updateButtonState();
+}
+
+function showQuestion() {
+  const quizDiv = document.getElementById("quiz");
+  const q = selected[currentIndex];
+  document.getElementById("progressFill").style.width = ((currentIndex / selected.length) * 100) + "%";
+  quizDiv.innerHTML = `<div class="question">(${currentIndex + 1}/${selected.length}) ${q.q}</div>
+  <div class="difficulty">難易度：${q.difficulty}</div>
+  <div class="options">
+    ${q.options.map((opt, i) => `<label><input type='radio' name='option' value='${i}'> ${opt}</label>`).join('')}
+  </div>`;
+
+  if (userAnswers[currentIndex] !== undefined) {
+    const option = document.querySelector(`input[name='option'][value='${userAnswers[currentIndex]}']`);
+    if (option) option.checked = true;
+  }
+}
+
+function nextQuestion() {
+  const selectedOption = document.querySelector("input[name='option']:checked");
+  if (!selectedOption) { alert("請先選擇答案"); return; }
+  userAnswers[currentIndex] = parseInt(selectedOption.value);
+  currentIndex++;
+  if (currentIndex < selected.length) {
+    showQuestion();
+    updateButtonState();
+  } else {
+    showResult();
+    updateButtonState();
+  }
+}
+
+function prevQuestion() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showQuestion();
+    updateButtonState();
+  }
+}
+
+function updateButtonState() {
+  const prevBtn = document.getElementById('prevBtn');
+  if (currentIndex <= 0 || currentIndex >= selected.length) {
+    prevBtn.style.display = 'none';
+  } else {
+    prevBtn.style.display = 'inline-block';
+  }
+}
+
+function showResult() {
+  let correct = 0;
+  let errorData = JSON.parse(localStorage.getItem('errorCount281')) || {};
+  let answerRec = JSON.parse(localStorage.getItem('answerRec281')) || {};
+  let correctScore = JSON.parse(localStorage.getItem('perfectScoreCount281')) || 0;
+  let resultHTML = "";
+
+  selected.forEach((q, idx) => {
+    const isCorrect = userAnswers[idx] === q.answer;
+    if (!isCorrect) { errorData[q.q] = (errorData[q.q] || 0) + 1; }
+    /*
+    if (isCorrect) {
+      correct++;
+      resultHTML += `<div class='correct'><p>第 ${idx + 1} 題 答對！</p><p>題目：${q.q}</p></div>`;
+    } else {
+      resultHTML += `<div class='wrong'><p>第 ${idx + 1} 題 錯誤！</p><p>題目：${q.q}</p></div>`;
+    }*/
+    if (isCorrect) {
+      correct++;
+      resultHTML += `<div class='correct'><p>第 ${idx + 1} 題 答對！</p>
+      <p>題目：${q.q}</p>
+      <p>難易度：${q.difficulty}</p>
+      <p>正確答案：${q.options[q.answer]}</p></div><hr>`;
+      answerRec[q.q] = (answerRec[q.q] || 0) + 1;
+    } else {
+      resultHTML += `<div class='wrong'><p>第 ${idx + 1} 題 錯誤！</p>
+      <p>題目：${q.q}</p>
+      <p>難易度：${q.difficulty}</p>
+      <p>選項：${q.options.map((opt, i) => `${i + 1}. ${opt}`).join(' / ')}</p>
+      <p>你的答案：${q.options[userAnswers[idx]] || "未作答"}</p>
+      <p>正確答案：${q.options[q.answer]}</p></div><hr>`;
+    }
+  });
+
+  if (correct === selected.length) {
+    correctScore++;
+    localStorage.setItem('perfectScoreCount281', correctScore);
+    if(correctScore % 2 == 0) {
+      alert('🎉 恭喜！完美通過！妳根本是神！！！請欣賞盛大煙火～～');
+      launchOmgFireworks();
+    } else {
+      alert('🎉 恭喜！完美通過！');
+      launchFireworks();
+    }
+  } else {
+    localStorage.setItem('perfectScoreCount281', correctScore);
+  }
+
+  localStorage.setItem('errorCount281', JSON.stringify(errorData));
+  localStorage.setItem('answerRec281', JSON.stringify(answerRec));
+  document.getElementById("quiz").innerHTML = "";
+  document.getElementById("progressFill").style.width = "100%";
+  document.getElementById("result").innerHTML = `<h2>作答完成！答對 ${correct}/${selected.length} 題</h2><h3>完美通關次數：${correctScore} 次</h3>` + resultHTML;
+  document.getElementById("nextBtn").innerText = "重新測驗";
+  document.getElementById("nextBtn").onclick = startQuiz;
+  updateStatus();
+  //drawPie(correct, selected.length - correct);
+}
+
+function drawPie(correct, wrong) {
+  document.getElementById("pieChart").style.display = "block";
+  new Chart(document.getElementById('pieChart'), {
+    type: 'pie',
+    data: {
+      labels: ['答對', '答錯'],
+      datasets: [{ data: [correct, wrong], backgroundColor: ['#a0e7a0', '#ff9999'] }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+  });
+}
+
+function showErrorRanking() {
+  const errorData = JSON.parse(localStorage.getItem('errorCount281')) || {};
+  const errorArray = Object.entries(errorData).sort((a, b) => b[1] - a[1]);
+  if (errorArray.length == 0) {
+    document.getElementById("result").innerHTML = "<h2>目前無錯題紀錄！</h2>";
+    return;
+  }
+  const html = errorArray.map(([qText, count], i) => {
+    const question = questions.find(q => q.q === qText);
+    const correctAns = question ? question.options[question.answer] : '(找不到正確答案)';
+    return `<div class='ranking-entry ${i === 0 ? 'first' : i === 1 ? 'second' : i === 2 ? 'third' : ''}'>
+      <div>${qText}<br>正確答案：${correctAns}</div><div style='font-size:20px;'>${count}</div>
+    </div>`;
+  }).join('');
+  document.getElementById("result").innerHTML = `<h2>錯題排行榜</h2>${html}`;
+}
+
+function clearErrorData() {
+  if (confirm("確定清除所有作題紀錄？")) {
+    localStorage.removeItem('errorCount281');
+    localStorage.removeItem('answerRec281');
+    localStorage.removeItem('perfectScoreCount281');
+    alert("作題紀錄已清除！");
+    document.getElementById("result").innerHTML = "<h2>作題紀錄已清除！</h2>";
+  }
+}
+
+function startErrorPractice() {
+  let errorData = JSON.parse(localStorage.getItem('errorCount281')) || {};
+  const errorArray =  Object.entries(errorData).sort((a, b) => b[1] - a[1]);
+  const topQuestions = errorArray.map(([q]) => q);
+  if (topQuestions.length == 0) { alert('目前沒有錯題可以練習！'); return; }
+  selected = questions.filter(q => topQuestions.includes(q.q));
+  selected = pickRandomQuestions(selected, 10);
+  shuffle(selected);
+  currentIndex = 0; userAnswers = []; isErrorPracticeMode = true;
+  document.getElementById("result").innerHTML = "";
+  document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
+  updateStatus();
+  showQuestion();
+}
+
+function startUnansweredPractice() {
+  isUnansweredMode = true;
+  let answerRec = JSON.parse(localStorage.getItem('answerRec281')) || {};
+  selected = questions.filter(q => !(q.q in answerRec));
+  if (selected.length === 0) {
+    alert("目前所有題目都已經作答過囉！");
+    return;
+  }
+  selected = pickRandomQuestions(selected, 10);
+  shuffle(selected);
+  currentIndex = 0; userAnswers = [];
+  document.getElementById("result").innerHTML = "";
+  document.getElementById("nextBtn").innerText = "下一題";
+  document.getElementById("nextBtn").onclick = nextQuestion;
+  addBackToQuizButton();
+  updateStatus();
+  showQuestion();
+}
+
+function addBackToQuizButton() {
+  removeBackToQuizButton();
+  const backButton = document.createElement('button');
+  backButton.id = 'backBtn';
+  backButton.innerText = '返回隨機測驗';
+  backButton.onclick = startQuiz;
+  document.getElementById('buttonArea').appendChild(backButton);
+}
+
+function removeBackToQuizButton() {
+  const backBtn = document.getElementById('backBtn');
+  if (backBtn) backBtn.remove();
+}
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function updateStatus() {
+  let answerRec = JSON.parse(localStorage.getItem('answerRec281')) || {};
+  let errorData = JSON.parse(localStorage.getItem('errorCount281')) || {};
+  let correctScore = JSON.parse(localStorage.getItem('perfectScoreCount281')) || 0;
+  let unansweredCount = questions.filter(q => !(q.q in answerRec )).length;
+  let errorCount = questions.filter(q => (q.q in errorData )).length;
+  const statusDiv = document.getElementById("status");
+  if (statusDiv) {
+    statusDiv.innerHTML = `尚未被答對題目：${unansweredCount} / 錯題：${errorCount} / 完美通關：${correctScore}`;
+  }
+}
+
+function launchFireworks() {
+  const canvas = document.getElementById('fireworks');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.display = 'block';
+
+  let particles = [];
+
+  for (let i = 0; i < 50; i++) {
+    particles.push({
+      x: canvas.width/2,
+      y: canvas.height/2,
+      speed: Math.random() * 5 + 2,
+      angle: Math.random() * 2 * Math.PI,
+      radius: Math.random() * 3 + 2,
+      alpha: 1,
+      decay: Math.random() * 0.02 + 0.01
+    });
+  }
+
+  function draw() {
+    ctx.fillStyle = "rgba(0,0,0,0.1)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(p => {
+      p.x += Math.cos(p.angle) * p.speed;
+      p.y += Math.sin(p.angle) * p.speed;
+      p.alpha -= p.decay;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${p.alpha})`;
+      ctx.fill();
+    });
+
+    particles = particles.filter(p => p.alpha > 0);
+
+    if (particles.length > 0) {
+      requestAnimationFrame(draw);
+    } else {
+      canvas.style.display = 'none';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  draw();
+}
+
+function launchOmgFireworks() {
+  const canvas = document.getElementById('fireworks');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.display = 'block';
+
+  const colorSets = [
+    ['#ff4d4d', '#ff6666', '#ff9999'],  // 紅系
+    ['#66ccff', '#66ffff', '#99ffff'],  // 藍系
+    ['#ffff66', '#ffcc66', '#ffd966']   // 黃系
+  ];
+
+  let currentRound = 0;
+  let particles = [];
+
+  function createParticles(colors) {
+    for (let i = 0; i < 900; i++) {
+      particles.push({
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        speed: Math.random() * 12 + 5,
+        angle: Math.random() * 2 * Math.PI,
+        radius: Math.random() * 3 + 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: 1,
+        decay: Math.random() * 0.02 + 0.004
+      });
+    }
+  }
+
+  function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.02)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(p => {
+      p.x += Math.cos(p.angle) * p.speed;
+      p.y += Math.sin(p.angle) * p.speed;
+      p.alpha -= p.decay;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color.replace(')', `,${p.alpha})`).replace('rgb', 'rgba');
+      ctx.fill();
+    });
+
+    particles = particles.filter(p => p.alpha > 0);
+
+    if (particles.length > 0 || currentRound < 3) {
+      requestAnimationFrame(draw);
+    } else {
+      canvas.style.display = 'none';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  function startNextRound() {
+    if (currentRound < 3) {
+      createParticles(colorSets[currentRound % colorSets.length]);
+      currentRound++;
+      setTimeout(startNextRound, 600); // 200毫秒後再爆下一輪
+    }
+  }
+
+  createParticles(colorSets[currentRound % colorSets.length]);
+  currentRound++;
+  setTimeout(startNextRound, 600);
+  draw();
+}
+
+
+startQuiz();
+
+</script>
+</body>
+</html>
