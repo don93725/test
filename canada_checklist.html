@@ -3,688 +3,353 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>加拿大打工度假一年｜行前 Checklist</title>
+  <title>加拿大打工度假一年｜極簡行李檢查表</title>
   <style>
     :root {
-      --bg: #f6f8fb;
+      --bg: #f5f7fb;
       --card: #ffffff;
       --text: #1f2937;
       --muted: #6b7280;
       --line: #e5e7eb;
       --primary: #2563eb;
-      --primary-soft: #eff6ff;
-      --success: #16a34a;
-      --warning: #b45309;
-      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-      --radius: 18px;
+      --danger: #b91c1c;
+      --danger-bg: #fef2f2;
+      --warn: #92400e;
+      --warn-bg: #fff7ed;
+      --success: #15803d;
+      --radius: 16px;
+      --shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
     }
-
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
-      background: linear-gradient(180deg, #f8fbff 0%, #f6f8fb 100%);
+      background: var(--bg);
       color: var(--text);
+      line-height: 1.45;
     }
-
     .wrap {
-      max-width: 1080px;
+      max-width: 980px;
       margin: 0 auto;
-      padding: 24px 16px 80px;
+      padding: 16px 12px 48px;
     }
-
-    .hero {
-      background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 45%, #60a5fa 100%);
-      color: white;
-      border-radius: 28px;
-      padding: 28px 24px;
-      box-shadow: var(--shadow);
-      margin-bottom: 20px;
-    }
-
-    .hero h1 {
-      margin: 0 0 10px;
-      font-size: clamp(28px, 4vw, 40px);
-      line-height: 1.15;
-    }
-
-    .hero p {
-      margin: 8px 0;
-      color: rgba(255,255,255,0.92);
-      line-height: 1.7;
-    }
-
-    .toolbar {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin: 18px 0 24px;
-    }
-
-    .stat, .action-card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 16px;
+    .top {
+      background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+      color: #fff;
+      border-radius: 22px;
+      padding: 18px 18px 16px;
+      margin-bottom: 12px;
       box-shadow: var(--shadow);
     }
-
-    .stat .label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    .stat .value {
+    .top h1 {
+      margin: 0 0 6px;
       font-size: 28px;
-      font-weight: 800;
+      line-height: 1.1;
     }
-
-    .actions {
+    .top p {
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.95;
+    }
+    .toolbar {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 22px;
+      gap: 8px;
+      margin: 12px 0;
     }
-
-    button {
-      appearance: none;
-      border: 0;
+    .toolbar button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
       border-radius: 999px;
-      padding: 11px 16px;
-      font-size: 14px;
+      padding: 8px 12px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
-      transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease;
     }
-
-    button:hover { transform: translateY(-1px); }
-    button:active { transform: translateY(0); }
-
-    .btn-primary {
+    .toolbar button.primary {
       background: var(--primary);
-      color: white;
-      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+      color: #fff;
+      border-color: var(--primary);
     }
-
-    .btn-secondary {
-      background: white;
-      color: var(--text);
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .summary .box {
+      background: #fff;
       border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+      box-shadow: var(--shadow);
     }
-
-    .hint-bar {
-      background: #fff7ed;
-      border: 1px solid #fed7aa;
-      color: #9a3412;
-      border-radius: 16px;
-      padding: 14px 16px;
-      margin-bottom: 24px;
-      line-height: 1.7;
+    .summary .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 3px;
     }
-
+    .summary .value {
+      font-size: 22px;
+      font-weight: 800;
+    }
+    .alert {
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      border: 1px solid;
+      font-size: 13px;
+    }
+    .alert.red {
+      background: var(--danger-bg);
+      border-color: #fecaca;
+      color: var(--danger);
+    }
+    .alert.orange {
+      background: var(--warn-bg);
+      border-color: #fed7aa;
+      color: var(--warn);
+    }
     .section {
       background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 18px;
+      border-radius: 18px;
+      margin-bottom: 10px;
+      overflow: hidden;
       box-shadow: var(--shadow);
-      margin-bottom: 18px;
     }
-
-    .section-header {
+    .section > summary {
+      list-style: none;
+      cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px 14px;
+      font-weight: 800;
+      font-size: 16px;
+      background: #fff;
     }
-
-    .section-title {
-      margin: 0;
-      font-size: 22px;
-    }
-
-    .section-subtitle {
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 4px;
-    }
-
-    .pill {
-      background: var(--primary-soft);
+    .section > summary::-webkit-details-marker { display: none; }
+    .section-count {
+      font-size: 12px;
       color: var(--primary);
+      background: #eff6ff;
       border-radius: 999px;
-      padding: 7px 12px;
-      font-size: 13px;
+      padding: 4px 8px;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+    .section-content {
+      border-top: 1px solid var(--line);
+      padding: 8px 10px 10px;
+    }
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      margin: 6px 0;
+      overflow: hidden;
+      background: #fff;
+    }
+    .item.done {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+    .item-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 9px 10px;
+    }
+    .item-head input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--success);
+      margin: 0;
+    }
+    .name {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .mini-tag {
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 999px;
       font-weight: 700;
       white-space: nowrap;
     }
-
-    .item-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .item {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: #fff;
-      overflow: hidden;
-    }
-
-    .item.done {
-      border-color: #bbf7d0;
-      background: #f0fdf4;
-    }
-
-    .item-main {
-      display: flex;
-      align-items: start;
-      gap: 12px;
-      padding: 14px;
-    }
-
-    .item-main input[type="checkbox"] {
-      margin-top: 3px;
-      width: 20px;
-      height: 20px;
-      accent-color: var(--success);
-      flex: 0 0 auto;
-    }
-
-    .item-content {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .item-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 6px;
-    }
-
-    .item-name {
-      font-weight: 800;
-      font-size: 16px;
-    }
-
-    .tag {
-      font-size: 12px;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 999px;
-    }
-
-    .tag.high { background: #fee2e2; color: #b91c1c; }
-    .tag.medium { background: #fef3c7; color: #92400e; }
-    .tag.low { background: #e0f2fe; color: #075985; }
-
-    .item-short {
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    details {
+    .high { background: #fee2e2; color: #b91c1c; }
+    .medium { background: #fef3c7; color: #92400e; }
+    .low { background: #dbeafe; color: #1d4ed8; }
+    .item details {
       border-top: 1px dashed var(--line);
-      background: rgba(255,255,255,0.65);
     }
-
-    details summary {
+    .item details summary {
       list-style: none;
       cursor: pointer;
-      padding: 12px 14px;
-      font-weight: 700;
+      padding: 7px 10px;
+      font-size: 12px;
       color: var(--primary);
-      user-select: none;
+      font-weight: 700;
     }
-
-    details summary::-webkit-details-marker { display: none; }
-
-    details[open] summary {
-      background: #f8fbff;
+    .item details summary::-webkit-details-marker { display: none; }
+    .tip {
+      padding: 0 10px 10px;
+      font-size: 12px;
+      color: #4b5563;
+      line-height: 1.65;
     }
-
-    .tip-content {
-      padding: 0 14px 14px;
-      color: #374151;
-      line-height: 1.75;
-      font-size: 14px;
-    }
-
-    .footer-note {
-      margin-top: 28px;
+    .note {
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.7;
+      font-size: 12px;
+      margin-top: 14px;
       text-align: center;
     }
-
-    .sticky-save {
-      position: sticky;
-      bottom: 12px;
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
+    .save-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%) translateY(10px);
+      background: rgba(17,24,39,0.92);
+      color: #fff;
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      opacity: 0;
+      transition: all .2s ease;
       pointer-events: none;
     }
-
-    .save-toast {
-      background: rgba(17, 24, 39, 0.9);
-      color: white;
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      box-shadow: var(--shadow);
-      opacity: 0;
-      transform: translateY(10px);
-      transition: all .25s ease;
-      pointer-events: auto;
-    }
-
     .save-toast.show {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateX(-50%) translateY(0);
     }
-
-    @media (max-width: 820px) {
-      .toolbar {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 560px) {
-      .wrap { padding: 14px 12px 72px; }
-      .toolbar { grid-template-columns: 1fr; }
-      .hero { padding: 22px 18px; border-radius: 22px; }
-      .section { padding: 14px; border-radius: 20px; }
-      .item-main { padding: 12px; }
+    @media (max-width: 720px) {
+      .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .top h1 { font-size: 24px; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <section class="hero">
-      <h1>加拿大打工度假一年<br>行前 Checklist</h1>
-      <p>這份清單可直接給朋友逐項檢查。每個項目都能勾選，狀態會自動記錄在 <strong>sessionStorage</strong>，重新整理頁面仍會保留；關閉分頁後會清空，適合單次檢查使用。</p>
-      <p>每一項右下方都有「為什麼要帶」的小提示，可展開查看，讓頁面保持乾淨。</p>
-    </section>
-
-    <section class="toolbar">
-      <div class="stat">
-        <div class="label">總項目</div>
-        <div class="value" id="totalCount">0</div>
-      </div>
-      <div class="stat">
-        <div class="label">已完成</div>
-        <div class="value" id="doneCount">0</div>
-      </div>
-      <div class="stat">
-        <div class="label">未完成</div>
-        <div class="value" id="todoCount">0</div>
-      </div>
-      <div class="stat">
-        <div class="label">完成率</div>
-        <div class="value" id="progressText">0%</div>
-      </div>
-    </section>
-
-    <div class="actions">
-      <button class="btn-primary" id="expandAllBtn">全部展開提示</button>
-      <button class="btn-secondary" id="collapseAllBtn">全部收合提示</button>
-      <button class="btn-secondary" id="checkAllBtn">全部勾選</button>
-      <button class="btn-secondary" id="resetBtn">清空本次勾選</button>
+    <div class="top">
+      <h1>加拿大打工度假一年<br>極簡行李檢查表</h1>
+      <p>先看最重要區塊，再往下做一次完整檢查。提示內容都收起來，需要時再展開。</p>
     </div>
 
-    <div class="hint-bar">
-      <strong>優先檢查順序：</strong>先看「最容易忘記且最重要」，再看「入境文件」，最後補齊生活用品與衣物。<br>
-      <strong>提醒：</strong>這份是行前整理工具，不是官方法律文件清單。入境前仍建議再對照加拿大官方最新規定與航空公司行李規範。
+    <div class="summary">
+      <div class="box"><div class="label">總項目</div><div class="value" id="totalCount">0</div></div>
+      <div class="box"><div class="label">已勾選</div><div class="value" id="doneCount">0</div></div>
+      <div class="box"><div class="label">未勾選</div><div class="value" id="todoCount">0</div></div>
+      <div class="box"><div class="label">完成率</div><div class="value" id="progressText">0%</div></div>
     </div>
+
+    <div class="toolbar">
+      <button class="primary" id="expandAllSectionsBtn">全部展開區塊</button>
+      <button id="collapseAllSectionsBtn">全部收合區塊</button>
+      <button id="expandAllTipsBtn">全部展開提示</button>
+      <button id="collapseAllTipsBtn">全部收合提示</button>
+      <button id="checkAllBtn">全部勾選</button>
+      <button id="resetBtn">清空本次勾選</button>
+    </div>
+
+    <div class="alert red"><strong>先確認：</strong>保險是否買滿一年、護照與 POE Letter 是否放在隨身行李、第一晚住宿地址與財力證明是否已備好。</div>
+    <div class="alert orange"><strong>這份工具的設計目標：</strong>讓朋友可以在一個頁面快速完成一次行李檢查，細節原因都藏起來，需要時再展開看。</div>
 
     <div id="app"></div>
 
-    <div class="sticky-save">
-      <div class="save-toast" id="saveToast">已自動儲存本分頁勾選狀態</div>
-    </div>
-
-    <p class="footer-note">
-      狀態儲存在 sessionStorage：同一分頁重新整理會保留，關閉分頁後會清空。<br>
-      適合給朋友打開後直接逐項檢查，不會永久留在裝置上。
-    </p>
+    <div class="note">勾選狀態使用 sessionStorage 暫存：重新整理同分頁會保留，關閉分頁後清空。</div>
   </div>
 
+  <div class="save-toast" id="saveToast">已自動記住本分頁勾選狀態</div>
+
   <script>
-    const STORAGE_KEY = 'canada-working-holiday-checklist-v1';
+    const STORAGE_KEY = 'canada-wh-checklist-compact-v2';
 
     const sections = [
       {
-        title: '最容易忘記且最重要',
-        subtitle: '忘了最麻煩，優先檢查這區',
+        title: '最重要，先檢查',
+        open: true,
         items: [
-          {
-            id: 'insurance-1year',
-            name: '全年保險證明（至少覆蓋整段停留）',
-            priority: 'high',
-            short: '很多人只買 3 個月，結果入境時工作許可可能只給對應保險期間。',
-            tip: '打工度假入境時，海關很可能會看保險期間。若保險沒有覆蓋預計停留的一整年，工作許可可能不會給滿。這是非常多人會忽略的大坑。'
-          },
-          {
-            id: 'document-backup',
-            name: '所有重要文件的雲端與手機備份',
-            priority: 'high',
-            short: '紙本遺失時，電子備份會救命。',
-            tip: '建議至少備份護照、POE Letter、保險、機票、財力證明、駕照、履歷。可放 Google Drive、iCloud、Email 與手機離線檔案。護照不見、臨時被要求補件時會非常有用。'
-          },
-          {
-            id: 'international-license',
-            name: '國際駕照／英文駕照資料',
-            priority: 'medium',
-            short: '很多人到當地才發現租車、某些工作或搬家時很需要。',
-            tip: '不是每個人都一定會開車，但加拿大有些城市或工作情境很依賴交通工具。先在台灣辦好通常比到了當地再查資料方便很多。'
-          },
-          {
-            id: 'extra-glasses',
-            name: '備用眼鏡或足量隱形眼鏡',
-            priority: 'high',
-            short: '眼鏡壞掉很麻煩，臨時重配通常較貴也較慢。',
-            tip: '對有近視的人來說這常常是最值得帶的備用品之一。除了備用眼鏡，隱形眼鏡與藥水也可多準備一些，避免初期還沒熟悉當地購買管道時手忙腳亂。'
-          },
-          {
-            id: 'english-resume',
-            name: '英文履歷（電子檔＋少量紙本）',
-            priority: 'high',
-            short: '很多人到了才開始做履歷，會拖慢找工作。',
-            tip: '餐飲、零售、飯店或一般服務業有時還是會直接收紙本履歷。先備好 PDF 與 5–10 份紙本，會比到當地臨時找地方印方便很多。'
-          },
-          {
-            id: 'first-night-address',
-            name: '第一晚住宿地址與訂房資料',
-            priority: 'high',
-            short: '入境時可能被問今晚住哪裡。',
-            tip: '除了地址本身，最好連訂單編號、聯絡方式都備著。手機沒網路時，也建議保留紙本或截圖。'
-          },
-          {
-            id: 'proof-of-funds',
-            name: '財力證明',
-            priority: 'high',
-            short: '常被忽略，但入境時可能被要求出示。',
-            tip: '通常建議準備足夠的存款證明、網銀截圖或英文版銀行文件。除了符合入境需求，也能讓朋友比較不會在前幾週資金太緊。'
-          },
-          {
-            id: 'carry-on-clothes',
-            name: '隨身行李放一套換洗衣物與基本藥品',
-            priority: 'medium',
-            short: '托運行李延誤時會差很多。',
-            tip: '很多人只把東西全塞托運，結果行李晚到一兩天就很狼狽。至少準備一套內衣褲、T-shirt、牙刷和常用藥在隨身包內。'
-          }
+          { id: 'insurance', name: '全年保險證明（覆蓋整段停留）', priority: 'high', tip: '這是最常被忽略的重點。若保險只買部分期間，工作許可可能不會給滿一年。' },
+          { id: 'passport', name: '護照', priority: 'high', tip: '確認效期足夠，並放隨身行李。' },
+          { id: 'poe', name: 'POE Letter／打工度假核准信', priority: 'high', tip: '入境換工作許可的重要文件，紙本與電子檔都建議備好。' },
+          { id: 'funds', name: '財力證明', priority: 'high', tip: '入境時可能被要求出示，最好先準備英文或清楚可辨識的版本。' },
+          { id: 'stay1', name: '第一晚住宿地址與訂房資料', priority: 'high', tip: '海關可能會問今晚住哪裡，最好能快速出示。' },
+          { id: 'doc-backup', name: '所有重要文件電子備份', priority: 'high', tip: '護照、保險、機票、核准信、駕照等都建議放雲端與手機。' },
+          { id: 'carryon-set', name: '隨身行李放一套換洗衣物＋基本藥', priority: 'medium', tip: '若托運延誤，第一晚不會太狼狽。' },
+          { id: 'resume', name: '英文履歷（電子檔＋少量紙本）', priority: 'medium', tip: '很多人到了才開始準備，會拖慢找工作。' }
         ]
       },
       {
         title: '入境文件',
-        subtitle: '通關與領取工作許可時最重要',
         items: [
-          {
-            id: 'passport',
-            name: '護照',
-            priority: 'high',
-            short: '最基本且不可少。',
-            tip: '確認效期足夠，並檢查是否有損毀。若護照效期太短，可能影響可停留時間或後續辦理文件。'
-          },
-          {
-            id: 'poe-letter',
-            name: 'POE Letter / 打工度假核准信',
-            priority: 'high',
-            short: '入境換取工作許可的關鍵文件。',
-            tip: '這是申請 IEC 工作假期後的重要核准文件，建議紙本與電子檔都備著。入境時若臨時找不到會非常慌。'
-          },
-          {
-            id: 'iec-approval',
-            name: 'IEC 相關核准文件',
-            priority: 'medium',
-            short: '與主核准信一起整理會更安心。',
-            tip: '雖然實際以 POE 文件最關鍵，但相關申請核准紀錄、確認信、下載 PDF 一起留著，遇到核對問題時更好說明。'
-          },
-          {
-            id: 'return-ticket-or-funds',
-            name: '回程機票或購買回程機票的能力證明',
-            priority: 'medium',
-            short: '有時海關會問。',
-            tip: '若尚未購買回程票，至少要能證明自己有足夠財力購買返程機票，避免被認為沒有離境規劃。'
-          },
-          {
-            id: 'flight-itinerary',
-            name: '機票／行程單',
-            priority: 'medium',
-            short: '轉機、延誤、報到時都可能用到。',
-            tip: '建議把航班編號、轉機資訊、託運額度截圖存好。若現場網路不穩，能立即出示很重要。'
-          },
-          {
-            id: 'emergency-contact',
-            name: '緊急聯絡人資料',
-            priority: 'medium',
-            short: '發生意外、延誤、失聯時會派上用場。',
-            tip: '整理台灣家人、加拿大住宿方、保險聯絡方式、銀行客服電話，最好放手機與紙本各一份。'
-          }
+          { id: 'iec', name: 'IEC 相關核准文件', priority: 'medium', tip: '與主核准信一起整理，遇到核對問題時較安心。' },
+          { id: 'ticket', name: '機票／行程單', priority: 'medium', tip: '轉機、報到、查詢託運資訊都會用到。' },
+          { id: 'return-proof', name: '回程機票或足夠購票能力證明', priority: 'medium', tip: '若未買回程票，至少要能證明有能力購買。' },
+          { id: 'emergency', name: '緊急聯絡人資料', priority: 'low', tip: '家人、住宿方、保險聯絡電話整理好會很有用。' },
+          { id: 'license', name: '國際駕照／英文駕照資料', priority: 'medium', tip: '租車、某些工作或移動城市時可能會需要。' }
         ]
       },
       {
-        title: '醫療與身體需求',
-        subtitle: '最常後悔沒帶齊的一區',
+        title: '藥品與身體需求',
         items: [
-          {
-            id: 'cold-meds',
-            name: '感冒藥／止痛藥／腸胃藥／過敏藥',
-            priority: 'high',
-            short: '剛到陌生環境身體容易不適。',
-            tip: '很多人初到當地會因時差、氣候、飲食改變而不舒服。台灣自己習慣的常備藥通常更安心，也不用第一時間研究當地藥局怎麼買。'
-          },
-          {
-            id: 'bandages',
-            name: 'OK 繃、小型醫療包',
-            priority: 'low',
-            short: '小傷口處理很方便。',
-            tip: '剛搬家、搬行李、換環境時很容易擦傷或割傷，有基礎急救用品會方便很多。'
-          },
-          {
-            id: 'thermometer',
-            name: '體溫計',
-            priority: 'low',
-            short: '發燒時有沒有量測差很多。',
-            tip: '生病時若只是覺得很熱或很冷，不一定知道嚴重程度。帶一支輕巧的體溫計很實用。'
-          },
-          {
-            id: 'prescription',
-            name: '個人處方藥與英文藥單',
-            priority: 'high',
-            short: '有長期用藥需求的人特別重要。',
-            tip: '若有慢性病、皮膚藥、氣喘藥、腸胃處方藥等，請準備足量與英文說明。某些藥在當地未必容易快速取得。'
-          }
+          { id: 'meds', name: '感冒藥／止痛藥／腸胃藥／過敏藥', priority: 'high', tip: '剛到陌生環境、氣候改變時最常用到。' },
+          { id: 'prescription', name: '個人處方藥與英文藥單', priority: 'high', tip: '有長期用藥的人特別重要。' },
+          { id: 'thermometer', name: '體溫計', priority: 'low', tip: '生病時判斷狀況更方便。' },
+          { id: 'firstaid', name: 'OK 繃／簡易醫療包', priority: 'low', tip: '搬行李、搬家、走路磨腳時都可能用到。' },
+          { id: 'glasses', name: '備用眼鏡／足量隱形眼鏡', priority: 'high', tip: '眼鏡壞掉會很麻煩，臨時處理通常較貴。' }
         ]
       },
       {
-        title: '電子用品與旅行工具',
-        subtitle: '忘了就會一直不方便',
+        title: '3C 與旅行工具',
         items: [
-          {
-            id: 'adapter',
-            name: '萬用轉接頭',
-            priority: 'high',
-            short: '加拿大插頭規格不同，這幾乎一定會用到。',
-            tip: '加拿大常見 A / B 型插頭，若沒有轉接頭，手機和筆電到了當地第一天就可能無法充電。這是超常見遺漏項。'
-          },
-          {
-            id: 'powerbank',
-            name: '行動電源（放隨身行李）',
-            priority: 'medium',
-            short: '轉機、找路、聯絡住宿都很需要電。',
-            tip: '長程飛行與轉機很容易耗電，尤其剛到時還要查地圖、聯絡、開電子文件。記得不可放托運。'
-          },
-          {
-            id: 'laptop',
-            name: '筆電與充電器',
-            priority: 'medium',
-            short: '找工作、處理文件、報稅、租屋都會用到。',
-            tip: '若朋友準備待一年，筆電通常很值得帶。很多行政與找工作流程用手機處理效率較低。'
-          },
-          {
-            id: 'usb-drive',
-            name: 'USB 隨身碟',
-            priority: 'low',
-            short: '少數情況還是方便傳檔或列印。',
-            tip: '雖然雲端為主，但履歷、證件、表格需要臨時在外面印時，有時還是會覺得有 USB 比較直覺。'
-          },
-          {
-            id: 'charging-cables',
-            name: '各種充電線與備用線',
-            priority: 'medium',
-            short: '線壞掉或遺失時會很麻煩。',
-            tip: '手機、耳機、手錶、行動電源如果使用不同規格，建議整理成一袋。至少帶一條備用線，初期會省很多事。'
-          }
+          { id: 'adapter', name: '萬用轉接頭', priority: 'high', tip: '加拿大插頭規格不同，到當地第一天就會用到。' },
+          { id: 'powerbank', name: '行動電源（放隨身行李）', priority: 'medium', tip: '轉機、找路、看文件、聯絡住宿都很需要。' },
+          { id: 'phone', name: '手機與充電器', priority: 'high', tip: '不用多說，這是生存工具。' },
+          { id: 'laptop', name: '筆電與充電器', priority: 'medium', tip: '找工作、填資料、租屋、辦文件通常比較方便。' },
+          { id: 'cables', name: '各種充電線與備用線', priority: 'medium', tip: '體積小但很容易漏帶。' },
+          { id: 'usb', name: 'USB 隨身碟', priority: 'low', tip: '臨時列印或傳檔有時還是好用。' }
         ]
       },
       {
-        title: '生活用品與容易忘記的小物',
-        subtitle: '不是沒它不行，但帶了會舒服很多',
+        title: '生活用品',
         items: [
-          {
-            id: 'folding-bag',
-            name: '折疊購物袋',
-            priority: 'medium',
-            short: '很多地方購物袋要另外收費。',
-            tip: '這個體積超小卻很常用，買菜、採買、搬家時都很方便。屬於很容易忘記但使用頻率很高的東西。'
-          },
-          {
-            id: 'thermos',
-            name: '保溫杯',
-            priority: 'medium',
-            short: '天冷時真的非常實用。',
-            tip: '如果朋友怕冷、常喝熱水或咖啡，保溫杯很值得。除了舒服，也能減少外出一直買飲料。'
-          },
-          {
-            id: 'slippers',
-            name: '輕量拖鞋',
-            priority: 'medium',
-            short: '住宿、共用浴室、旅館都很方便。',
-            tip: '很多人直到住進青年旅館或短租房才想到拖鞋的重要性。選輕薄防滑款最實際。'
-          },
-          {
-            id: 'luggage-lock',
-            name: '行李鎖',
-            priority: 'low',
-            short: '青年旅館與轉機時都可能用到。',
-            tip: '除了托運行李，也可能用在 hostel 置物櫃。小東西但有時能增加很多安心感。'
-          },
-          {
-            id: 'luggage-scale',
-            name: '行李秤',
-            priority: 'low',
-            short: '回程或移動城市時很方便。',
-            tip: '剛去時未必天天用，但一年內常會買很多東西、換城市、回國帶伴手禮，行李秤能避免臨櫃超重。'
-          },
-          {
-            id: 'umbrella',
-            name: '折疊傘',
-            priority: 'low',
-            short: '比當地臨時買更省事。',
-            tip: '雖然加拿大不是每個城市都常下雨，但帶一把輕傘在移動或面試當天很有幫助。'
-          },
-          {
-            id: 'nail-clipper',
-            name: '指甲剪／小剪刀',
-            priority: 'low',
-            short: '幾乎每個人都容易漏掉。',
-            tip: '體積小但很常用。剛到新環境時，這類生活小物最常因為忘記帶而被迫臨時購買。'
-          }
+          { id: 'shopping-bag', name: '折疊購物袋', priority: 'medium', tip: '體積小但使用率高，很多地方購物袋要另外付費。' },
+          { id: 'thermos', name: '保溫杯', priority: 'medium', tip: '怕冷的人很適合帶，冬天會很有感。' },
+          { id: 'slippers', name: '輕量拖鞋', priority: 'medium', tip: '住 hostel、短租、共用浴室都方便。' },
+          { id: 'lock', name: '行李鎖', priority: 'low', tip: '行李與 hostel 置物櫃都可能會用到。' },
+          { id: 'scale', name: '行李秤', priority: 'low', tip: '回程或換城市時避免超重。' },
+          { id: 'umbrella', name: '折疊傘', priority: 'low', tip: '小東西但遇到天氣不好很方便。' },
+          { id: 'nail', name: '指甲剪／小剪刀', priority: 'low', tip: '最常忘記帶的生活小物之一。' }
         ]
       },
       {
-        title: '衣物與氣候準備',
-        subtitle: '以實用為主，不建議帶太多',
+        title: '衣物',
         items: [
-          {
-            id: 'heattech',
-            name: '發熱衣／保暖內層',
-            priority: 'high',
-            short: '冬天或季節轉換時很有幫助。',
-            tip: '保暖最有效率的方式往往不是帶超多厚重外套，而是靠內層做出洋蔥式穿法。這類衣物在行李體積與實用性之間很平衡。'
-          },
-          {
-            id: 'warm-socks',
-            name: '厚襪／保暖襪',
-            priority: 'medium',
-            short: '腳冷會非常不舒服。',
-            tip: '很多人注意到上半身保暖，卻忽略腳。尤其若要走很多路、通勤、冬天外出，襪子品質差很多。'
-          },
-          {
-            id: 'hat-gloves-scarf',
-            name: '毛帽／手套／圍巾',
-            priority: 'medium',
-            short: '真正冷的時候這些比想像中重要。',
-            tip: '這三樣不一定一到就用到，但一遇到風大低溫就非常有感。可先帶基本款，之後再依城市天氣補充。'
-          },
-          {
-            id: 'basic-clothes',
-            name: '基本日常衣物（夠穿即可，不要過量）',
-            priority: 'medium',
-            short: '很多人帶太多，反而拖累移動。',
-            tip: '一年不是一次把一年四季的穿搭全塞進去。建議先帶核心搭配，缺的到當地再補。行李輕一點，搬家、轉機、換城市都比較舒服。'
-          },
-          {
-            id: 'formal-outfit',
-            name: '一套簡單正式服裝',
-            priority: 'low',
-            short: '面試、正式場合可能會需要。',
-            tip: '不需要很誇張，但至少準備能應付工作面試或比較正式場合的服裝，會比完全沒有選擇好很多。'
-          }
+          { id: 'basic-clothes', name: '基本日常衣物（夠穿即可）', priority: 'medium', tip: '不要帶太多，一年生活不等於一次塞滿一年份衣服。' },
+          { id: 'heattech', name: '發熱衣／保暖內層', priority: 'high', tip: '冷的時候非常實用，且比厚重大外套更省空間。' },
+          { id: 'warm-socks', name: '厚襪／保暖襪', priority: 'medium', tip: '腳冷真的很不舒服。' },
+          { id: 'winter-set', name: '毛帽／手套／圍巾', priority: 'medium', tip: '冷風大時很有感，先帶基本款即可。' },
+          { id: 'formal', name: '一套簡單正式服裝', priority: 'low', tip: '面試或正式場合可能會用到。' }
         ]
       },
       {
-        title: '財務與入境後第一週',
-        subtitle: '不是打包物品，但非常值得一起確認',
+        title: '錢與落地後第一週',
         items: [
-          {
-            id: 'credit-cards',
-            name: '至少兩張可用信用卡',
-            priority: 'high',
-            short: '避免單一卡片失效或被鎖。',
-            tip: '剛到當地初期支出很多，若只帶一張卡，遇到刷不過、風控、遺失都很麻煩。兩張以上會安心很多。'
-          },
-          {
-            id: 'cad-cash',
-            name: '少量加幣現金',
-            priority: 'medium',
-            short: '雖然多數能刷卡，但留一些現金較保險。',
-            tip: '不是要帶很多，而是留基本緩衝，像機場交通、臨時小額支付、網路還沒穩定前使用。'
-          },
-          {
-            id: 'sin-plan',
-            name: '知道入境後要申請 SIN',
-            priority: 'medium',
-            short: '沒有 SIN 很難正式工作。',
-            tip: '這不是要帶的實體物品，但很多人去之前沒先了解，到了後才知道工作前還要先辦理。先知道流程能省時間。'
-          },
-          {
-            id: 'bank-plan',
-            name: '知道入境後要開銀行帳戶與辦手機門號',
-            priority: 'low',
-            short: '生活安頓速度會差很多。',
-            tip: '這兩件通常是落地後很快就會碰到的事。先查好幾家銀行與電信方案，比到當地才從零開始找更有效率。'
-          }
+          { id: 'cards', name: '至少兩張可用信用卡', priority: 'high', tip: '避免某張卡被鎖或遺失後完全沒得刷。' },
+          { id: 'cash', name: '少量加幣現金', priority: 'medium', tip: '機場交通、小額付款、初期沒有網路時較方便。' },
+          { id: 'sin', name: '知道入境後要申請 SIN', priority: 'medium', tip: '沒有 SIN 很難正式工作，先知道流程很重要。' },
+          { id: 'bank-phone', name: '知道要開銀行帳戶與辦手機門號', priority: 'low', tip: '先做功課，落地後安頓速度會快很多。' }
         ]
       }
     ];
 
     function loadState() {
-      try {
-        return JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || {};
-      } catch (e) {
-        return {};
-      }
+      try { return JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || {}; }
+      catch (e) { return {}; }
     }
 
     function saveState(state) {
@@ -692,74 +357,65 @@
       showToast();
     }
 
-    function getAllItems() {
+    function allItems() {
       return sections.flatMap(section => section.items);
     }
 
-    function priorityLabel(priority) {
-      if (priority === 'high') return '高優先';
-      if (priority === 'medium') return '中優先';
-      return '補充';
+    function label(priority) {
+      if (priority === 'high') return '高';
+      if (priority === 'medium') return '中';
+      return '補';
     }
 
     function render() {
       const state = loadState();
       const app = document.getElementById('app');
-      app.innerHTML = sections.map(section => {
+      app.innerHTML = sections.map((section) => {
         const done = section.items.filter(item => state[item.id]).length;
+        const openAttr = section.open ? 'open' : '';
         return `
-          <section class="section">
-            <div class="section-header">
-              <div>
-                <h2 class="section-title">${section.title}</h2>
-                <div class="section-subtitle">${section.subtitle}</div>
-              </div>
-              <div class="pill">${done} / ${section.items.length} 已完成</div>
-            </div>
-            <div class="item-list">
+          <details class="section" ${openAttr}>
+            <summary>
+              <span>${section.title}</span>
+              <span class="section-count">${done} / ${section.items.length}</span>
+            </summary>
+            <div class="section-content">
               ${section.items.map(item => `
-                <div class="item ${state[item.id] ? 'done' : ''}" data-item-id="${item.id}">
-                  <div class="item-main">
+                <div class="item ${state[item.id] ? 'done' : ''}">
+                  <div class="item-head">
                     <input type="checkbox" data-id="${item.id}" ${state[item.id] ? 'checked' : ''} />
-                    <div class="item-content">
-                      <div class="item-title">
-                        <span class="item-name">${item.name}</span>
-                        <span class="tag ${item.priority}">${priorityLabel(item.priority)}</span>
-                      </div>
-                      <div class="item-short">${item.short}</div>
-                    </div>
+                    <div class="name">${item.name}</div>
+                    <div class="mini-tag ${item.priority}">${label(item.priority)}</div>
                   </div>
                   <details>
-                    <summary>為什麼要帶／為什麼要先確認</summary>
-                    <div class="tip-content">${item.tip}</div>
+                    <summary>為什麼需要</summary>
+                    <div class="tip">${item.tip}</div>
                   </details>
                 </div>
               `).join('')}
             </div>
-          </section>
+          </details>
         `;
       }).join('');
-
-      bindEvents();
+      bindCheckboxes();
       updateStats();
     }
 
     function updateStats() {
       const state = loadState();
-      const total = getAllItems().length;
-      const done = getAllItems().filter(item => state[item.id]).length;
+      const total = allItems().length;
+      const done = allItems().filter(item => state[item.id]).length;
       const todo = total - done;
-      const progress = total ? Math.round((done / total) * 100) : 0;
-
+      const progress = total ? Math.round(done / total * 100) : 0;
       document.getElementById('totalCount').textContent = total;
       document.getElementById('doneCount').textContent = done;
       document.getElementById('todoCount').textContent = todo;
       document.getElementById('progressText').textContent = `${progress}%`;
     }
 
-    function bindEvents() {
-      document.querySelectorAll('input[type="checkbox"][data-id]').forEach(checkbox => {
-        checkbox.addEventListener('change', (e) => {
+    function bindCheckboxes() {
+      document.querySelectorAll('input[type="checkbox"][data-id]').forEach(el => {
+        el.addEventListener('change', e => {
           const state = loadState();
           state[e.target.dataset.id] = e.target.checked;
           saveState(state);
@@ -768,29 +424,32 @@
       });
     }
 
-    let toastTimer = null;
+    let toastTimer;
     function showToast() {
       const toast = document.getElementById('saveToast');
       toast.classList.add('show');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove('show'), 1200);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 1000);
     }
 
-    document.getElementById('expandAllBtn').addEventListener('click', () => {
-      document.querySelectorAll('details').forEach(detail => detail.open = true);
+    document.getElementById('expandAllSectionsBtn').addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(d => d.open = true);
     });
-
-    document.getElementById('collapseAllBtn').addEventListener('click', () => {
-      document.querySelectorAll('details').forEach(detail => detail.open = false);
+    document.getElementById('collapseAllSectionsBtn').addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(d => d.open = false);
     });
-
+    document.getElementById('expandAllTipsBtn').addEventListener('click', () => {
+      document.querySelectorAll('.item details').forEach(d => d.open = true);
+    });
+    document.getElementById('collapseAllTipsBtn').addEventListener('click', () => {
+      document.querySelectorAll('.item details').forEach(d => d.open = false);
+    });
     document.getElementById('checkAllBtn').addEventListener('click', () => {
-      const nextState = {};
-      getAllItems().forEach(item => nextState[item.id] = true);
-      saveState(nextState);
+      const state = {};
+      allItems().forEach(item => state[item.id] = true);
+      saveState(state);
       render();
     });
-
     document.getElementById('resetBtn').addEventListener('click', () => {
       sessionStorage.removeItem(STORAGE_KEY);
       showToast();
