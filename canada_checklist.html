@@ -255,8 +255,8 @@
       <button id="resetBtn">清空本次勾選</button>
     </div>
 
-    <div class="alert red"><strong>先確認：</strong>保險是否買滿一年、護照與 POE Letter 是否放在隨身行李、第一晚住宿地址與財力證明是否已備好。</div>
-    <div class="alert orange"><strong>這份工具的設計目標：</strong>讓朋友可以在一個頁面快速完成一次行李檢查，細節原因都藏起來，需要時再展開看。</div>
+    <div class="alert red"><strong>先確認：</strong>若本人有過敏體質，過敏藥、急救藥物與英文藥名請列最優先；再確認保險是否買滿一年、護照與 POE Letter 是否放在隨身行李、第一晚住宿地址與財力證明是否已備好。</div>
+    <div class="alert orange"><strong>這份工具的設計目標：</strong>讓朋友可以在一個頁面快速完成一次行李檢查，細節原因都藏起來，需要時再展開看。我已再次全面檢視清單，優先順序調整為：過敏與健康安全、入境必要文件、初期找工作與生活安頓、日常便利用品。仍建議出發前再對照航空公司行李規範與加拿大官方最新入境要求。</div>
 
     <div id="app"></div>
 
@@ -273,6 +273,7 @@
         title: '最重要，先檢查',
         open: true,
         items: [
+          { id: 'allergy-meds', name: '過敏藥／個人常用藥＋英文藥名或藥單', priority: 'high', tip: '若本人有過敏體質，這項應放在最最最上面。剛到新環境、氣候與飲食改變時，過敏可能更容易發作；帶自己用過且適合的藥，並備英文藥名、成分或處方資訊，會比臨時在當地找藥更安心。若有 EpiPen 等急救需求，也應一併確認。' },
           { id: 'insurance', name: '全年保險證明（覆蓋整段停留）', priority: 'high', tip: '這是最常被忽略的重點。若保險只買部分期間，工作許可可能不會給滿一年。' },
           { id: 'passport', name: '護照', priority: 'high', tip: '確認效期足夠，並放隨身行李。' },
           { id: 'poe', name: 'POE Letter／打工度假核准信', priority: 'high', tip: '入境換工作許可的重要文件，紙本與電子檔都建議備好。' },
@@ -296,7 +297,7 @@
       {
         title: '藥品與身體需求',
         items: [
-          { id: 'meds', name: '感冒藥／止痛藥／腸胃藥／過敏藥', priority: 'high', tip: '剛到陌生環境、氣候改變時最常用到。' },
+          { id: 'meds', name: '感冒藥／止痛藥／腸胃藥', priority: 'high', tip: '剛到陌生環境、氣候改變時最常用到。若本身有固定過敏用藥，請以最上方超級重要區為優先。' },
           { id: 'prescription', name: '個人處方藥與英文藥單', priority: 'high', tip: '有長期用藥的人特別重要。' },
           { id: 'thermometer', name: '體溫計', priority: 'low', tip: '生病時判斷狀況更方便。' },
           { id: 'firstaid', name: 'OK 繃／簡易醫療包', priority: 'low', tip: '搬行李、搬家、走路磨腳時都可能用到。' },
