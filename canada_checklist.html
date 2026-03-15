@@ -260,7 +260,7 @@
 
     <div id="app"></div>
 
-    <div class="note">勾選狀態使用 sessionStorage 暫存：重新整理同分頁會保留，關閉分頁後清空。</div>
+    <div class="note">勾選狀態使用 localStorage 儲存：重新整理頁面、開新分頁或重新打開此網址都會保留，除非手動清除或按下重置。</div>
   </div>
 
   <div class="save-toast" id="saveToast">已自動記住本分頁勾選狀態</div>
@@ -349,12 +349,12 @@
     ];
 
     function loadState() {
-      try { return JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || {}; }
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
       catch (e) { return {}; }
     }
 
     function saveState(state) {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       showToast();
     }
 
@@ -369,6 +369,7 @@
     }
 
     function render() {
+      // 從 localStorage 讀取狀態
       const state = loadState();
       const app = document.getElementById('app');
       app.innerHTML = sections.map((section) => {
@@ -420,7 +421,13 @@
           const state = loadState();
           state[e.target.dataset.id] = e.target.checked;
           saveState(state);
-          render();
+
+          // 只更新視覺狀態，不重新 render，避免狀態被洗掉
+          const item = e.target.closest('.item');
+          if (e.target.checked) item.classList.add('done');
+          else item.classList.remove('done');
+
+          updateStats();
         });
       });
     }
@@ -452,7 +459,9 @@
       render();
     });
     document.getElementById('resetBtn').addEventListener('click', () => {
-      sessionStorage.removeItem(STORAGE_KEY);
+      // 清除 localStorage
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY);
       showToast();
       render();
     });
